@@ -1,0 +1,2820 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Pembelajaran Ekspor &amp; Impor</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; }
+    h1, h2, h3, .display { font-family: 'Fraunces', serif; }
+    
+    .page { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .nav-btn.active { color: #fff; }
+    .nav-btn:hover:not(.active) { opacity: 0.7; }
+    
+    .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); }
+    
+    .wave-bg { background: linear-gradient(135deg, var(--primary), var(--primary) 50%, #0891b2); }
+    .dots-pattern { background-image: radial-gradient(circle, var(--accent) 1.5px, transparent 1.5px); background-size: 20px 20px; }
+    
+    .quiz-option { transition: all 0.2s; }
+    .quiz-option.correct { background: #16a34a !important; color: white !important; border-color: #15803d !important; }
+    .quiz-option.wrong { background: #dc2626 !important; color: white !important; border-color: #b91c1c !important; }
+    .quiz-option.disabled { pointer-events: none; opacity: 0.85; }
+    
+    .shake { animation: shake 0.4s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    .float { animation: float 3s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Stepper Flow Styles */
+    .flow-stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 1rem 0;
+      scroll-behavior: smooth;
+    }
+
+    .flow-stepper.vertical {
+      flex-direction: column;
+      align-items: stretch;
+      overflow-x: visible;
+    }
+
+    .flow-step {
+      flex-shrink: 0;
+      position: relative;
+      opacity: 0;
+      animation: stepFadeIn 0.5s ease-out forwards;
+    }
+
+    .flow-step:nth-child(1) { animation-delay: 0s; }
+    .flow-step:nth-child(3) { animation-delay: 0.15s; }
+    .flow-step:nth-child(5) { animation-delay: 0.3s; }
+    .flow-step:nth-child(7) { animation-delay: 0.45s; }
+    .flow-step:nth-child(9) { animation-delay: 0.6s; }
+    .flow-step:nth-child(11) { animation-delay: 0.75s; }
+    .flow-step:nth-child(13) { animation-delay: 0.9s; }
+    .flow-step:nth-child(15) { animation-delay: 1.05s; }
+
+    @keyframes stepFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .flow-step-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-width: 100px;
+      padding: 1rem;
+      background-color: white;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .flow-step-content:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .flow-step-number {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 28px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .flow-step-icon {
+      font-size: 2rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .flow-step-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .flow-step-desc {
+      font-size: 0.7rem;
+      color: #64748b;
+      line-height: 1.3;
+    }
+
+    .flow-arrow {
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      color: var(--primary);
+      font-weight: bold;
+      padding: 0 0.5rem;
+      opacity: 0;
+      animation: arrowFadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes arrowFadeIn {
+      from {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      to {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+    }
+
+    .flow-arrow:nth-child(2) { animation-delay: 0.08s; }
+    .flow-arrow:nth-child(4) { animation-delay: 0.23s; }
+    .flow-arrow:nth-child(6) { animation-delay: 0.38s; }
+    .flow-arrow:nth-child(8) { animation-delay: 0.53s; }
+    .flow-arrow:nth-child(10) { animation-delay: 0.68s; }
+    .flow-arrow:nth-child(12) { animation-delay: 0.83s; }
+    .flow-arrow:nth-child(14) { animation-delay: 0.98s; }
+
+    .flow-stepper.vertical .flow-arrow {
+      transform: rotate(90deg);
+      padding: 0.5rem 0;
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .flow-stepper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        overflow-x: visible;
+      }
+
+      .flow-step {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .flow-step-content {
+        min-width: unset;
+        width: 100%;
+        padding: 1rem;
+      }
+
+      .flow-arrow {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 0 !important;
+        transform: rotate(90deg) !important;
+        margin: 0;
+      }
+    }
+    
+    .audio-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--primary-light);
+      border: 2px solid var(--primary);
+      border-radius: 0.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      transition: 0.2s;
+      margin-bottom: 1.5rem;
+    }
+    .audio-control:hover, .audio-control.playing { background: var(--primary); color: white; }
+
+    :root {
+      --primary: #1e40af;
+      --secondary: #ffffff;
+      --accent: #fbbf24;
+      --text: #1e293b;
+      --bg: #f0f9ff;
+      --primary-light: #dbeafe;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full w-full" style="background-color: var(--bg);">
+  <div class="h-full w-full flex flex-col overflow-auto">
+   <header class="sticky top-0 z-40 shadow-md" style="background-color: var(--secondary); border-bottom: 4px solid var(--accent);">
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3" aria-label="Navigasi utama">
+     <div class="flex items-center gap-2 mr-auto">
+      <div class="w-10 h-10 rounded-xl wave-bg flex items-center justify-center text-white">
+       <i data-lucide="ship" class="w-6 h-6"></i>
+      </div>
+      <div>
+       <h1 class="text-lg font-extrabold leading-tight" style="color: var(--primary);" id="app-title">Media Pembelajaran Interaktif Perdagangan Internasional</h1>
+       <p class="text-xs leading-tight" style="color: #64748b;" id="app-subtitle">Belajar Ekspor &amp; Impor</p>
+      </div>
+     </div>
+     <div id="nav-buttons" class="flex flex-wrap gap-1.5 text-sm font-bold"></div>
+    </nav>
+   </header>
+   <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 py-6"></main>
+   <footer style="background-color: var(--primary); color: var(--secondary);" class="text-center py-4 text-sm"><span id="footer-text">© EduTrade — Media Pembelajaran Ekspor &amp; Impor untuk Siswa 🌏</span>
+   </footer>
+  </div>
+  <script>
+    // ===== HELPER FUNCTIONS =====
+    function answerReflection(id, idx) {
+      const prod = exportProducts[id] || importProducts[id];
+      if (!prod) return;
+      const feedbackDiv = document.getElementById(`reflection-feedback-${id}`);
+      if (feedbackDiv) {
+        feedbackDiv.innerHTML = `
+          <div class="rounded-lg p-3 font-semibold text-sm flex items-start gap-2" style="background-color: rgba(59,130,246,0.1); color: #3b82f6;">
+            <span class="text-lg mt-0.5">ℹ️</span>
+            <span>Pertanyaan ini untuk merangsang pikiranmu tentang materi ini.</span>
+          </div>
+        `;
+        feedbackDiv.classList.remove('hidden');
+      }
+      if (document.getElementById(`reflection-${id}`)) {
+        document.getElementById(`reflection-${id}`).querySelectorAll('button').forEach((b, i) => {
+          b.style.opacity = i === idx ? '1' : '0.5';
+          b.disabled = true;
+        });
+      }
+    }
+
+    function answerCountryReflection(id, type, idx) {
+      const country = type === 'export' ? exportCountries[id] : importCountries[id];
+      if (!country) return;
+      const feedbackDiv = document.getElementById(`country-reflection-feedback-${type}-${id}`);
+      if (feedbackDiv) {
+        feedbackDiv.innerHTML = `
+          <div class="rounded-lg p-3 font-semibold text-sm flex items-start gap-2" style="background-color: rgba(59,130,246,0.1); color: #3b82f6;">
+            <span class="text-lg mt-0.5">ℹ️</span>
+            <span>Pertanyaan ini untuk merangsang pikiranmu tentang materi ini.</span>
+          </div>
+        `;
+        feedbackDiv.classList.remove('hidden');
+      }
+      if (document.getElementById(`country-reflection-${type}-${id}`)) {
+        document.getElementById(`country-reflection-${type}-${id}`).querySelectorAll('button').forEach((b, i) => {
+          b.style.opacity = i === idx ? '1' : '0.5';
+          b.disabled = true;
+        });
+      }
+    }
+
+    // ===== DATA PRODUK & NEGARA =====
+    const exportProducts = {
+      'minyak-sawit': {
+        name: 'Minyak Sawit',
+        emoji: '🌴',
+        desc: 'Minyak yang berasal dari buah kelapa sawit, dapat diolah menjadi berbagai produk.',
+        alasan: 'Indonesia memiliki iklim tropis yang sangat cocok untuk perkebunan kelapa sawit. Hasil produksi melimpah sehingga Indonesia dapat menjualnya ke banyak negara.',
+        negara: ['India', 'Tiongkok', 'Pakistan', 'Belanda'],
+        kegunaan: 'Minyak goreng, sabun, kosmetik, makanan olahan, bahan industri, biofuel',
+        manfaat: '💵 Menambah devisa negara | 👷 Membuka lapangan kerja petani | 🏭 Mengembangkan industri',
+        tantangan: 'Harus menjaga kelestarian hutan agar tidak merusak lingkungan',
+        refleksi: 'Apa manfaat ekspor minyak sawit bagi Indonesia?',
+        refleksiOptions: [
+          { text: 'Menambah devisa dan membuka lapangan kerja', correct: true, feedback: 'Benar! Ekspor minyak sawit membawa devisa besar dan memberikan pekerjaan bagi petani dan industri pengolahan.' },
+          { text: 'Membuat Indonesia berhenti berdagang', correct: false, feedback: 'Belum tepat. Sebaliknya, ekspor minyak sawit adalah kegiatan perdagangan yang menguntungkan bagi Indonesia.' },
+          { text: 'Menghilangkan kebutuhan petani', correct: false, feedback: 'Belum tepat. Ekspor minyak sawit justru membuka banyak peluang kerja bagi petani dan meningkatkan pendapatan mereka.' }
+        ]
+      },
+      'kopi': {
+        name: 'Kopi',
+        emoji: '☕',
+        desc: 'Biji kopi yang diproses dan dapat diseduh menjadi minuman kopi.',
+        alasan: 'Kopi dari Indonesia memiliki kualitas tinggi dan rasa yang unik karena ditanam di ketinggian yang tepat.',
+        negara: ['Amerika', 'Jerman', 'Italia', 'Jepang'],
+        kegunaan: 'Minuman kopi, bahan kopi instan, kopi premium untuk kafe-kafe internasional',
+        manfaat: '💵 Pendapatan petani meningkat | 🌍 Dikenal di seluruh dunia | 📈 Ekspansi pasar global',
+        tantangan: 'Harus menjaga konsistensi kualitas dan harga persaingan global',
+        refleksi: 'Mengapa kopi Indonesia sangat diminati di negara-negara maju seperti Amerika dan Eropa?',
+        refleksiOptions: [
+          { text: 'Karena kualitas rasa unik dan ditanam di ketinggian yang tepat', correct: true, feedback: 'Benar! Kopi Indonesia memiliki karakteristik unik karena ditanam di daerah pegunungan dengan iklim ideal.' },
+          { text: 'Karena kopi Indonesia adalah satu-satunya kopi yang ada', correct: false, feedback: 'Belum tepat. Banyak negara menghasilkan kopi, tapi Indonesia diminati karena kualitas dan keunikan rasanya.' },
+          { text: 'Karena kopi Indonesia sangat murah dibanding negara lain', correct: false, feedback: 'Belum tepat. Kopi Indonesia adalah kopi premium dengan harga tinggi karena kualitasnya yang istimewa.' }
+        ]
+      },
+      'kakao': {
+        name: 'Kakao',
+        emoji: '🍫',
+        desc: 'Biji kakao yang diolah menjadi cokelat, bubuk kakao, dan berbagai produk makanan.',
+        alasan: 'Indonesia adalah salah satu penghasil kakao terbesar di dunia dengan kualitas premium.',
+        negara: ['Belanda', 'Malaysia', 'Singapura', 'Belgia'],
+        kegunaan: 'Bahan baku cokelat, bubuk kakao, produk makanan bergizi, kosmetik',
+        manfaat: '💵 Devisa negara bertambah | 🚀 Industri makanan berkembang | 👶 Produk untuk kebutuhan global',
+        tantangan: 'Menjaga kualitas dan mencegah hama tanaman kakao',
+        refleksi: 'Bagaimana kakao Indonesia berkontribusi dalam industri cokelat dunia?',
+        refleksiOptions: [
+          { text: 'Sebagai bahan baku utama untuk pabrik cokelat di berbagai negara', correct: true, feedback: 'Benar! Kakao Indonesia dikirim ke pabrik cokelat di Belanda, Belgia, dan negara lain untuk diolah menjadi produk cokelat.' },
+          { text: 'Sebagai produk jadi yang langsung dimakan tanpa proses', correct: false, feedback: 'Belum tepat. Kakao dikirim dalam bentuk biji atau bahan baku ke pabrik untuk diolah lebih lanjut.' },
+          { text: 'Kakao Indonesia tidak penting bagi industri cokelat dunia', correct: false, feedback: 'Belum tepat. Indonesia adalah penghasil kakao utama yang menyuplai pabrik cokelat di seluruh dunia.' }
+        ]
+      },
+      'karet': {
+        name: 'Karet',
+        emoji: '🌾',
+        desc: 'Bahan dasar yang diambil dari pohon karet, digunakan untuk berbagai industri.',
+        alasan: 'Iklim Indonesia sempurna untuk perkebunan karet, produksi besar dan berkualitas tinggi.',
+        negara: ['Tiongkok', 'Amerika', 'India', 'Singapura'],
+        kegunaan: 'Ban kendaraan, sarung tangan medis, alas kaki, seal industri, perlengkapan olahraga',
+        manfaat: '💵 Pendapatan petani stabil | 🏭 Dukungan industri otomotif global | 🎾 Produk konsumen dunia',
+        tantangan: 'Menghadapi persaingan dengan produk sintetis dan negara penghasil lain',
+        refleksi: 'Produk apa saja yang bisa dibuat dari karet Indonesia yang diekspor?',
+        refleksiOptions: [
+          { text: 'Ban kendaraan, sarung tangan medis, alas kaki, dan seal industri', correct: true, feedback: 'Benar! Karet Indonesia digunakan untuk membuat berbagai produk yang dibutuhkan dunia.' },
+          { text: 'Hanya untuk membuat mainan anak-anak', correct: false, feedback: 'Belum tepat. Karet Indonesia memiliki banyak kegunaan industri yang lebih penting dari sekadar mainan.' },
+          { text: 'Karet tidak bisa digunakan untuk produk apapun', correct: false, feedback: 'Belum tepat. Karet adalah bahan baku yang sangat berharga untuk berbagai industri.' }
+        ]
+      },
+      'ikan': {
+        name: 'Ikan & Produk Perikanan',
+        emoji: '🐟',
+        desc: 'Ikan segar, ikan beku, atau makanan kaleng yang berasal dari laut Indonesia.',
+        alasan: 'Indonesia memiliki lautan luas dengan kekayaan ikan yang melimpah. Nelayan Indonesia menghasilkan tangkapan berkualitas tinggi.',
+        negara: ['Thailand', 'Vietnam', 'Jepang', 'Korea Selatan'],
+        kegunaan: 'Makanan protein, sushi, ikan beku untuk restoran, kaleng sardis, tepung ikan',
+        manfaat: '💵 Pendapatan nelayan meningkat | 🌊 Memanfaatkan kekayaan laut | 🍽️ Pangan global',
+        tantangan: 'Menjaga kelestarian laut dan tidak melakukan penangkapan ilegal',
+        refleksi: 'Mengapa ikan dari Indonesia banyak diekspor ke negara-negara Asia?',
+        refleksiOptions: [
+          { text: 'Karena Indonesia memiliki lautan luas dan ikan berkualitas tinggi', correct: true, feedback: 'Benar! Indonesia adalah produsen ikan besar yang memasok pasar Asia dengan produk berkualitas.' },
+          { text: 'Karena negara Asia tidak bisa menangkap ikan sendiri', correct: false, feedback: 'Belum tepat. Negara Asia juga memiliki hasil tangkapan, tapi mereka membeli dari Indonesia karena kualitas dan harganya kompetitif.' },
+          { text: 'Karena ikan Indonesia adalah satu-satunya ikan yang ada', correct: false, feedback: 'Belum tepat. Banyak negara memproduksi ikan, tapi Indonesia diminati karena kualitas dan efisiensi produksinya.' }
+        ]
+      },
+      'tekstil': {
+        name: 'Tekstil & Kain',
+        emoji: '🧥',
+        desc: 'Kain, pakaian, dan produk tekstil yang diproduksi di Indonesia.',
+        alasan: 'Indonesia memiliki industri tekstil yang maju dengan teknologi modern dan tenaga kerja terampil.',
+        negara: ['Amerika', 'Eropa', 'Australia', 'Kanada'],
+        kegunaan: 'Pakaian, celana, kemeja, seragam, kain untuk industri fashion, tekstil industri',
+        manfaat: '💵 Devisa negara bertambah | 👷 Membuka jutaan lapangan kerja | 🌍 Indonesia terkenal fashion',
+        tantangan: 'Bersaing dengan negara penghasil tekstil lain seperti Vietnam, Bangladesh',
+        refleksi: 'Mengapa industri tekstil Indonesia menjadi favorit pasar internasional?',
+        refleksiOptions: [
+          { text: 'Karena Indonesia memiliki teknologi modern dan tenaga kerja terampil', correct: true, feedback: 'Benar! Indonesia memiliki industri tekstil yang canggih dengan kualitas produk tinggi dan harga kompetitif.' },
+          { text: 'Karena Indonesia adalah satu-satunya produsen tekstil', correct: false, feedback: 'Belum tepat. Banyak negara memproduksi tekstil, tapi Indonesia diminati karena kualitas dan efisiensinya.' },
+          { text: 'Karena pasar internasional tidak perlu tekstil dari Indonesia', correct: false, feedback: 'Belum tepat. Sebaliknya, pasar global sangat membutuhkan produk tekstil berkualitas dari Indonesia.' }
+        ]
+      },
+      'kayu': {
+        name: 'Kayu & Produk Kayu',
+        emoji: '🪵',
+        desc: 'Kayu, furniture, dan produk olahan kayu dari hutan Indonesia.',
+        alasan: 'Indonesia memiliki hutan yang luas dengan berbagai jenis kayu berkualitas tinggi.',
+        negara: ['Jepang', 'Korea', 'Tiongkok', 'Malaysia'],
+        kegunaan: 'Furniture, pintu, jendela, lantai kayu, pulp untuk kertas, kayu lapis',
+        manfaat: '💵 Devisa dari kayu berkualitas | 🏠 Kebutuhan furniture global | 📄 Bahan baku industri',
+        tantangan: 'Harus menjaga hutan dan tidak menebang ilegal demi kelestarian lingkungan',
+        refleksi: 'Mengapa kayu Indonesia dipilih untuk membuat furniture berkualitas tinggi?',
+        refleksiOptions: [
+          { text: 'Karena Indonesia memiliki hutan luas dengan kayu berkualitas tinggi', correct: true, feedback: 'Benar! Hutan Indonesia menghasilkan berbagai jenis kayu yang cocok untuk furniture dan produk bernilai tinggi.' },
+          { text: 'Karena kayu Indonesia adalah satu-satunya pilihan di dunia', correct: false, feedback: 'Belum tepat. Banyak negara memiliki kayu, tapi Indonesia dipilih karena kualitas dan varietasnya.' },
+          { text: 'Karena kayu Indonesia tidak penting untuk furniture', correct: false, feedback: 'Belum tepat. Sebaliknya, kayu Indonesia sangat penting dan banyak diminati untuk produk furniture premium.' }
+        ]
+      },
+      'batik': {
+        name: 'Batik',
+        emoji: '🎨',
+        desc: 'Kain batik dengan motif tradisional Indonesia yang terkenal di dunia.',
+        alasan: 'Batik adalah warisan budaya Indonesia yang indah dan unik. Dunia menyukai keunikan dan keindahan batik Indonesia.',
+        negara: ['Jepang', 'Belanda', 'Inggris', 'Amerika'],
+        kegunaan: 'Pakaian fashion, tas, hiasan dinding, kerajinan seni, fashion premium',
+        manfaat: '💵 Devisa dari produk budaya | 🎭 Mempromosikan budaya Indonesia | 👗 Produk fashion unik',
+        tantangan: 'Melindungi keaslian batik Indonesia dari pembajakan desain',
+        refleksi: 'Apa yang membuat batik Indonesia sangat diminati oleh pasar fashion dunia?',
+        refleksiOptions: [
+          { text: 'Karena batik adalah warisan budaya unik dengan desain indah yang tidak ada di tempat lain', correct: true, feedback: 'Benar! Batik Indonesia memiliki keunikan dan keindahan tradisional yang membedakannya di pasar fashion global.' },
+          { text: 'Karena batik adalah satu-satunya kain di dunia', correct: false, feedback: 'Belum tepat. Banyak jenis kain, tapi batik Indonesia unik karena tradisi dan desainnya yang spesifik.' },
+          { text: 'Karena batik Indonesia murah dan tidak berkualitas', correct: false, feedback: 'Belum tepat. Batik Indonesia justru dipandang sebagai produk premium dengan nilai budaya tinggi.' }
+        ]
+      }
+    };
+
+    const exportCountries = {
+      'tiongkok': {
+        name: 'Tiongkok',
+        emoji: '🇨🇳',
+        barang: ['Minyak sawit', 'Kopi', 'Karet', 'Ikan', 'Tekstil'],
+        alasan: 'Tiongkok adalah negara industri besar dengan populasi lebih dari 1 miliar jiwa. Kebutuhan bahan baku, minyak, dan produk pertanian sangat tinggi.',
+        hubungan: 'Indonesia mengirim minyak sawit untuk industri makanan dan kosmetik Tiongkok. Tiongkok mengirim mesin dan elektronik ke Indonesia.',
+        manfaat: 'Pasar besar di Tiongkok membuat produk Indonesia mudah terjual. Volume ekspor besar = devisa besar untuk Indonesia.',
+        refleksi: 'Mengapa Tiongkok adalah pasar ekspor yang sangat penting bagi Indonesia?',
+        refleksiOptions: [
+          { text: 'Karena Tiongkok memiliki populasi besar dan kebutuhan bahan baku tinggi', correct: true, feedback: 'Benar! Tiongkok dengan 1 miliar lebih penduduk membutuhkan banyak bahan baku dan produk dari Indonesia.' },
+          { text: 'Karena Tiongkok tidak bisa memproduksi apapun sendiri', correct: false, feedback: 'Belum tepat. Tiongkok adalah produsen besar, tapi masih membutuhkan bahan baku dari Indonesia.' },
+          { text: 'Karena Indonesia hanya bisa berdagang dengan Tiongkok', correct: false, feedback: 'Belum tepat. Indonesia berdagang dengan banyak negara, tapi Tiongkok adalah mitra perdagangan utama.' }
+        ]
+      },
+      'usa': {
+        name: 'Amerika Serikat',
+        emoji: '🇺🇸',
+        barang: ['Kopi', 'Karet', 'Ikan', 'Elektronik'],
+        alasan: 'Amerika adalah negara maju dengan daya beli tinggi. Konsumen Amerika menyukai kopi berkualitas dan produk premium dari Indonesia.',
+        hubungan: 'Indonesia mengirim kopi premium ke Amerika yang dijual dengan harga mahal di kafe-kafe. Amerika mengirim teknologi dan mesin canggih.',
+        manfaat: 'Pasar Amerika sangat besar. Ekspor ke sana bisa membuat pendapatan perusahaan Indonesia meningkat drastis.',
+        refleksi: 'Mengapa produk Indonesia seperti kopi premium banyak diimpor oleh Amerika?',
+        refleksiOptions: [
+          { text: 'Karena konsumen Amerika menghargai kualitas dan kesegaran produk Indonesia', correct: true, feedback: 'Benar! Konsumen Amerika memiliki daya beli tinggi dan menghargai produk berkualitas premium dari Indonesia.' },
+          { text: 'Karena Amerika tidak bisa menghasilkan produk apapun', correct: false, feedback: 'Belum tepat. Amerika adalah produsen besar, tapi mereka mengimpor produk premium untuk memenuhi selera konsumen.' },
+          { text: 'Karena Indonesia memaksa Amerika membeli produknya', correct: false, feedback: 'Belum tepat. Perdagangan adalah pilihan sukarela yang saling menguntungkan bagi kedua belah pihak.' }
+        ]
+      },
+      'jepang': {
+        name: 'Jepang',
+        emoji: '🇯🇵',
+        barang: ['Batik', 'Tekstil', 'Karet', 'Kayu', 'Ikan'],
+        alasan: 'Jepang menyukai produk berkualitas dan autentik. Batik Indonesia dan kerajinan tradisional sangat diminati oleh pasar Jepang.',
+        hubungan: 'Indonesia mengirim batik dan tekstil ke Jepang. Jepang mengirim mobil, elektronik, dan mesin berteknologi tinggi ke Indonesia.',
+        manfaat: 'Ekspor ke Jepang membantu mempromosikan budaya Indonesia. Harga produk bisa lebih tinggi karena konsumen Jepang menyukai kualitas.',
+        refleksi: 'Mengapa Jepang sangat tertarik untuk membeli produk tradisional Indonesia seperti batik?',
+        refleksiOptions: [
+          { text: 'Karena batik memiliki nilai budaya dan keindahan autentik yang unik', correct: true, feedback: 'Benar! Jepang sebagai negara yang menghargai seni dan budaya, sangat menyukai keunikan dan autentisitas batik Indonesia.' },
+          { text: 'Karena Jepang tidak memiliki produk tradisional sendiri', correct: false, feedback: 'Belum tepat. Jepang memiliki budaya tradisional yang kaya, tapi mereka juga menghargai budaya dan seni dari negara lain.' },
+          { text: 'Karena batik Indonesia adalah satu-satunya kain di dunia', correct: false, feedback: 'Belum tepat. Ada banyak jenis kain tradisional, tapi batik Indonesia unik karena desain dan tekniknya.' }
+        ]
+      },
+      'india': {
+        name: 'India',
+        emoji: '🇮🇳',
+        barang: ['Minyak sawit', 'Kopi', 'Kakao', 'Tekstil'],
+        alasan: 'India adalah negara berpenduduk besar yang membutuhkan minyak sawit untuk industri makanan dan minyak goreng. Tekstil juga dibutuhkan.',
+        hubungan: 'Indonesia mengirim minyak sawit dalam jumlah besar. India mengirim bumbu rempah dan barang dagangan lainnya.',
+        manfaat: 'Pasar India sangat luas. Ekspor minyak sawit ke India dalam volume besar memberikan devisa stabil untuk Indonesia.',
+        refleksi: 'Apa alasan India mengimpor minyak sawit dalam volume besar dari Indonesia?',
+        refleksiOptions: [
+          { text: 'Karena India memiliki populasi besar dan kebutuhan minyak goreng yang tinggi', correct: true, feedback: 'Benar! India dengan lebih dari 1 miliar penduduk membutuhkan minyak sawit untuk industri makanan dan kebutuhan sehari-hari.' },
+          { text: 'Karena India tidak bisa memproduksi minyak sendiri', correct: false, feedback: 'Belum tepat. India bisa memproduksi minyak, tapi kebutuhannya tidak mencukupi untuk populasi besar.' },
+          { text: 'Karena minyak Indonesia adalah satu-satunya pilihan di dunia', correct: false, feedback: 'Belum tepat. Ada negara lain yang memproduksi minyak, tapi Indonesia adalah supplier utama untuk India.' }
+        ]
+      },
+      'singapura': {
+        name: 'Singapura',
+        emoji: '🇸🇬',
+        barang: ['Minyak sawit', 'Karet', 'Ikan', 'Kayu'],
+        alasan: 'Singapura adalah negara kecil tapi maju. Singapura menjadi pusat perdagangan, jadi banyak barang Indonesia dimulai dari sini sebelum dijual ke negara lain.',
+        hubungan: 'Indonesia mengirim barang ke Singapura. Singapura kemudian mengolah atau mendistribusikan ke negara lain. Win-win untuk semua.',
+        manfaat: 'Singapura membantu Indonesia mencapai pasar global. Lokasi strategis Singapura mempermudah pengiriman ekspor Indonesia.',
+        refleksi: 'Mengapa Singapura sering disebut sebagai "pintu" perdagangan Indonesia ke pasar dunia?'
+      },
+      'korsel': {
+        name: 'Korea Selatan',
+        emoji: '🇰🇷',
+        barang: ['Minyak sawit', 'Karet', 'Kayu', 'Tekstil'],
+        alasan: 'Korea Selatan adalah negara industri maju yang membutuhkan bahan baku untuk pabriknya, termasuk karet untuk ban mobil dan elektronik.',
+        hubungan: 'Indonesia mengirim bahan baku. Korea mengirim produk teknologi, mobil, dan elektronik yang kita lihat setiap hari.',
+        manfaat: 'Hubungan dagang yang stabil dengan Korea membuka peluang investasi dan transfer teknologi bagi Indonesia.',
+        refleksi: 'Mengapa Korea Selatan membutuhkan bahan baku seperti karet dan kayu dari Indonesia?',
+        refleksiOptions: [
+          { text: 'Karena Korea adalah negara industri yang membutuhkan bahan baku untuk produknya', correct: true, feedback: 'Benar! Korea Selatan adalah produsen mobil dan elektronik besar yang membutuhkan bahan baku berkualitas dari Indonesia.' },
+          { text: 'Karena Korea tidak bisa memproduksi apapun sendiri', correct: false, feedback: 'Belum tepat. Korea adalah produsen besar, tapi tetap membutuhkan bahan baku dari negara lain.' },
+          { text: 'Karena Indonesia memaksa Korea membeli produknya', correct: false, feedback: 'Belum tepat. Perdagangan adalah keputusan bisnis sukarela yang saling menguntungkan.' }
+        ]
+      }
+    };
+
+    const importProducts = {
+      'gandum': {
+        name: 'Gandum',
+        emoji: '🌾',
+        desc: 'Biji-bijian yang diolah menjadi tepung untuk roti, mi, dan makanan olahan.',
+        alasan: 'Indonesia tidak bisa memproduksi gandum dalam jumlah besar karena iklim tropis tidak cocok untuk gandum. Kebutuhan pangan terus meningkat.',
+        negara: ['Australia', 'Kanada', 'Ukraina', 'Amerika'],
+        kegunaan: 'Bahan roti, mi instan, biscuit, sereal, pizza, pasta, kue-kue',
+        manfaat: '🥘 Memenuhi kebutuhan pangan sehari-hari | 📈 Stabilisasi harga makanan | 🏭 Bahan baku industri makanan',
+        risiko: 'Indonesia terlalu bergantung impor. Jika harga gandum global naik, harga roti dan mi di Indonesia juga naik. Perlu swasembada pangan.',
+        refleksi: 'Mengapa Indonesia perlu mengimpor gandum meskipun memiliki pertanian yang maju?',
+        refleksiOptions: [
+          { text: 'Karena iklim tropis Indonesia tidak cocok untuk menaman gandum', correct: true, feedback: 'Benar! Gandum membutuhkan iklim empat musim, sedangkan Indonesia beriklim tropis sehingga harus mengimpor.' },
+          { text: 'Karena Indonesia tidak memiliki petani yang terampil', correct: false, feedback: 'Belum tepat. Indonesia memiliki petani terampil, tapi masalahnya adalah iklim tidak sesuai untuk gandum.' },
+          { text: 'Karena Indonesia tidak ingin menanam gandum', correct: false, feedback: 'Belum tepat. Indonesia akan senang bisa memproduksi gandum sendiri jika iklimnya cocok.' }
+        ]
+      },
+      'minyak-mentah': {
+        name: 'Minyak Mentah',
+        emoji: '🛢️',
+        desc: 'Minyak bumi yang belum diproses, digunakan untuk BBM dan industri kimia.',
+        alasan: 'Produksi minyak Indonesia menurun. Kebutuhan BBM (bensin, solar, minyak tanah) terus meningkat untuk kendaraan dan industri.',
+        negara: ['Arab Saudi', 'Kuwait', 'Iran', 'Rusia'],
+        kegunaan: 'Bensin kendaraan, solar untuk truk, minyak tanah, bahan baku plastik, pupuk kimia',
+        manfaat: '⛽ Ketersediaan energi | 🚗 Transportasi lancar | 🏭 Industri berjalan',
+        risiko: 'Ketergantungan energi impor membuat Indonesia rentan krisis. Devisa berkurang. Perlu energi terbarukan.',
+        refleksi: 'Setiap hari motor dan mobil di Indonesia menggunakan bensin impor. Bagaimana kalau Indonesia punya cukup minyak sendiri?'
+      },
+      'mobil': {
+        name: 'Mobil',
+        emoji: '🚗',
+        desc: 'Kendaraan beroda empat yang dirakit atau diproduksi di luar negeri.',
+        alasan: 'Indonesia belum memiliki industri otomotif yang sepenuhnya maju. Teknologi mobil canggih masih impor. Biaya produksi di luar lebih murah.',
+        negara: ['Jepang', 'Korea', 'Tiongkok', 'Thailand'],
+        kegunaan: 'Transportasi pribadi, taksi, bus, kendaraan komersial, kebutuhan sehari-hari masyarakat',
+        manfaat: '🚕 Transportasi lancar | 💼 Aktivitas ekonomi | 👨‍👩‍👧 Mobilitas keluarga',
+        risiko: 'Devisa untuk impor mobil besar. Industri otomotif lokal tertinggal. Perlu investasi industri mobil Indonesia.',
+        refleksi: 'Mobil di jalan raya Indonesia banyak buatan Jepang atau Korea. Apakah Indonesia bisa bikin mobil sendiri?'
+      },
+      'elektronik': {
+        name: 'Elektronik',
+        emoji: '📱',
+        desc: 'Barang elektronik seperti HP, laptop, TV, AC, kulkas dari luar negeri.',
+        alasan: 'Indonesia belum memiliki teknologi untuk produksi chip dan komponen elektronik canggih. Produksi luar lebih efisien dan lebih maju.',
+        negara: ['Tiongkok', 'Jepang', 'Korea', 'Taiwan'],
+        kegunaan: 'HP, laptop, TV, AC, kulkas, mesin cuci, perlengkapan hidup modern sehari-hari',
+        manfaat: '📞 Komunikasi modern | 💻 Pendidikan digital | 🎮 Hiburan | 🏠 Kenyamanan hidup',
+        risiko: 'Devisa habis untuk elektronik impor. Indonesia tidak berkembang di industri elektronik. Ketergantungan teknologi luar.',
+        refleksi: 'HP yang kamu pegang kemungkinan besar buatan Tiongkok atau Korea. Apa yang terjadi jika harga naik?'
+      },
+      'obat': {
+        name: 'Obat-Obatan',
+        emoji: '💊',
+        desc: 'Obat resep, vitamin, dan suplemen dari industri farmasi luar negeri.',
+        alasan: 'Teknologi farmasi global lebih maju. Indonesia masih mengimpor bahan baku obat dan obat jadi untuk memenuhi kebutuhan kesehatan masyarakat.',
+        negara: ['India', 'Tiongkok', 'Jerman', 'Swiss'],
+        kegunaan: 'Obat penyakit, antibiotik, vitamin, suplemen kesehatan, vaksin, obat darurat',
+        manfaat: '⚕️ Kesehatan masyarakat terjaga | 🏥 Perawatan medis tersedia | 💪 Pencegahan penyakit',
+        risiko: 'Bergantung impor obat. Jika ada krisis, ketersediaan obat terganggu. Perlu industri farmasi lokal yang kuat.',
+        refleksi: 'Obat yang kamu minum mungkin dari impor. Bagaimana kalau Indonesia bisa produksi obat sendiri berkualitas?'
+      },
+      'kimia': {
+        name: 'Bahan Kimia & Pupuk',
+        emoji: '🧪',
+        desc: 'Bahan kimia industri, pupuk, pestisida, dan zat kimia lainnya.',
+        alasan: 'Industri kimia Indonesia belum mencukupi. Pertanian Indonesia membutuhkan pupuk impor untuk meningkatkan hasil panen.',
+        negara: ['Tiongkok', 'India', 'Amerika', 'Belanda'],
+        kegunaan: 'Pupuk untuk pertanian, bahan kimia pabrik, pestisida, obat hama tanaman, deterjen',
+        manfaat: '🌾 Pertanian produktif | 🏭 Industri berjalan | 🌱 Hasil panen lebih baik',
+        risiko: 'Ketergantungan pupuk impor. Harga naik = harga beras naik. Perlu industri kimia dan pupuk lokal.',
+        refleksi: 'Pupuk yang dipakai petani untuk menanam padi kemungkinan dari impor. Apa dampaknya bagi harga beras?'
+      },
+      'mesin': {
+        name: 'Mesin Industri',
+        emoji: '🏗️',
+        desc: 'Mesin berat untuk pabrik, konstruksi, pertambangan, dan produksi.',
+        alasan: 'Teknologi mesin canggih masih dikuasai negara-negara maju. Indonesia membutuhkan mesin impor untuk industri manufaktur.',
+        negara: ['Jepang', 'Jerman', 'Amerika', 'Korea'],
+        kegunaan: 'Mesin pabrik tekstil, mesin konstruksi, mesin pertambangan, mesin produksi makanan, generator listrik',
+        manfaat: '⚙️ Industri manufaktur maju | 🏭 Produksi meningkat | 💼 Lapangan kerja terbuka',
+        risiko: 'Biaya impor tinggi. Indonesia tertinggal dalam teknologi. Perlu investasi R&D teknologi lokal.',
+        refleksi: 'Mesin di pabrik tekstil Indonesia kemungkinan buatan Jepang. Apa dampaknya bagi biaya produksi?'
+      },
+      'daging': {
+        name: 'Daging Sapi',
+        emoji: '🥩',
+        desc: 'Daging sapi segar atau beku dari luar negeri untuk konsumsi masyarakat.',
+        alasan: 'Produksi sapi di Indonesia belum mencukupi kebutuhan masyarakat yang semakin tinggi.',
+        negara: ['Australia', 'New Zealand', 'Brasil', 'Amerika'],
+        kegunaan: 'Daging konsumsi sehari-hari, daging untuk restoran, daging untuk industri makanan kemasan',
+        manfaat: '🥘 Protein hewan tersedia | 🍽️ Menu variasi makanan | 💪 Nutrisi terpenuhi',
+        risiko: 'Petani sapi lokal terdesak. Permintaan impor besar = devisa habis. Perlu dikembangkan peternakan sapi Indonesia.',
+        refleksi: 'Steik yang kamu makan di restoran mungkin daging sapi impor dari Australia atau Brazil!'
+      }
+    };
+
+    const importCountries = {
+      'tiongkok': {
+        name: 'Tiongkok',
+        emoji: '🇨🇳',
+        barang: ['Elektronik', 'Bahan Kimia', 'Mesin', 'Tekstil Sintetis', 'Mainan'],
+        alasan: 'Tiongkok adalah pabrik dunia. Produksi elektronik, tekstil, dan bahan kimia sangat murah dan efisien di sana.',
+        contoh: 'Smartphone, laptop, AC, mesin cuci, mainan anak-anak, suku cadang elektronik semua banyak dari Tiongkok.',
+        manfaat: '💰 Harga barang jadi lebih terjangkau | 📱 Akses teknologi modern | 🛍️ Pilihan produk banyak',
+        risiko: 'Produk lokal kalah bersaing. Devisa habis impor. Perlu industri lokal yang kompetitif.',
+        refleksi: 'Apa dampaknya jika hampir semua elektronik yang ada di rumahmu berasal dari Tiongkok?'
+      },
+      'jepang': {
+        name: 'Jepang',
+        emoji: '🇯🇵',
+        barang: ['Mobil', 'Elektronik', 'Mesin', 'Komponen Otomotif'],
+        alasan: 'Jepang adalah pemimpin teknologi otomotif dan elektronik dunia. Produk Jepang berkualitas tinggi dan diminati.',
+        contoh: 'Mobil Toyota, Honda, Suzuki, TV Sony, AC Daikin, mesin-mesin presisi tinggi dari Jepang banyak beredar di Indonesia.',
+        manfaat: '🚗 Transportasi berkualitas | 📺 Elektronik terpercaya | ⚙️ Teknologi maju',
+        risiko: 'Devisa untuk impor besar. Ketergantungan pada produk Jepang. Perlu industri lokal maju.',
+        refleksi: 'Mengapa produk teknologi Jepang sangat penting dan diminati oleh masyarakat Indonesia?'
+      },
+      'australia': {
+        name: 'Australia',
+        emoji: '🇦🇺',
+        barang: ['Gandum', 'Daging Sapi', 'Wol', 'Mineral Batu Bara'],
+        alasan: 'Australia memiliki lahan pertanian luas dan peternakan besar. Hasil panen dan ternak melimpah dan dapat diekspor.',
+        contoh: 'Gandum untuk roti dan mi instan, daging sapi untuk pasar Indonesia, mineral batu bara untuk energi.',
+        manfaat: '🌾 Pangan tersedia | 🥘 Protein hewan | ⚡ Energi listrik',
+        risiko: 'Indonesia bergantung impor pangan. Perlu meningkatkan pertanian dan peternakan lokal.',
+        refleksi: 'Apakah Indonesia dapat mengurangi impor gandum dan daging sapi dari Australia di masa depan?'
+      },
+      'thailand': {
+        name: 'Thailand',
+        emoji: '🇹🇭',
+        barang: ['Elektronik', 'Kendaraan', 'Beras', 'Seafood'],
+        alasan: 'Thailand adalah tetangga ASEAN yang memiliki industri manufaktur dan pertanian yang maju.',
+        contoh: 'Mobil roda 3, suku cadang elektronik, beras untuk pasar Indonesia, udang beku dan seafood.',
+        manfaat: '🚗 Transportasi murah | 🍚 Pangan | 🐟 Protein hewan laut',
+        risiko: 'Produk lokal kalah saing dengan Thailand. Perlu meningkatkan efisiensi industri lokal.',
+        refleksi: 'Mengapa produk murah dari Thailand banyak diminati oleh konsumen Indonesia?'
+      },
+      'korsel': {
+        name: 'Korea Selatan',
+        emoji: '🇰🇷',
+        barang: ['Elektronik', 'Mobil', 'Semikonduktor', 'Baterai'],
+        alasan: 'Korea adalah pemimpin teknologi elektronik dan otomotif. Smartphone, TV, mobil Korea sangat populer.',
+        contoh: 'Smartphone Samsung, TV LG, mobil Hyundai, Kia, baterai untuk kendaraan listrik dari Korea.',
+        manfaat: '📱 Teknologi smartphone canggih | 🚙 Mobil terjangkau | ⚡ Energi terbarukan',
+        risiko: 'Pasar elektronik didominasi Korea dan Tiongkok. Indonesia tertinggal. Perlu investasi industri teknologi.',
+        refleksi: 'Apa yang membuat HP Samsung dan mobil Hyundai begitu populer dan diminati di Indonesia?'
+      },
+      'usa': {
+        name: 'Amerika Serikat',
+        emoji: '🇺🇸',
+        barang: ['Gandum', 'Mesin', 'Teknologi', 'Produk Pertanian'],
+        alasan: 'Amerika adalah negara maju dengan pertanian canggih dan teknologi terdepan.',
+        contoh: 'Gandum, jagung, bahan kimia, mesin pertanian, software komputer, peralatan medis dari Amerika.',
+        manfaat: '🌾 Pangan premium | ⚙️ Mesin berkualitas | 💻 Teknologi terdepan',
+        risiko: 'Biaya impor tinggi. Devisa ke Amerika besar. Perlu industri lokal kompetitif.',
+        refleksi: 'Mengapa produk premium dan teknologi canggih dari Amerika Serikat banyak digunakan di Indonesia?'
+      }
+    };
+
+    const benefitScenarios = [
+      { title: '☕ Kopi Indonesia ke Dunia', key: 'kopi', options: [
+        { text: '🚜 Petani mendapat penghasilan lebih baik', category: 'masyarakat' },
+        { text: '🏢 Perusahaan ekspor mendapat pasar lebih luas', category: 'perusahaan' },
+        { text: '💵 Indonesia mendapat devisa dari ekspor', category: 'negara' }
+      ]},
+      { title: '🧴 Minyak Sawit ke Berbagai Negara', key: 'sawit', options: [
+        { text: '👨‍🌾 Petani kelapa sawit dapat pekerjaan tetap', category: 'masyarakat' },
+        { text: '🏭 Pabrik pengolahan sawit berkembang pesat', category: 'perusahaan' },
+        { text: '💰 Negara mendapat devisa besar', category: 'negara' }
+      ]},
+      { title: '🎨 Batik Tradisional ke Pasar Fashion Internasional', key: 'batik', options: [
+        { text: '🧑‍🎨 Pengrajin batik menjual dengan harga lebih tinggi', category: 'masyarakat' },
+        { text: '👗 Bisnis fashion Indonesia dikenal dunia', category: 'perusahaan' },
+        { text: '🌍 Budaya Indonesia dikenal dan dihargai dunia', category: 'negara' }
+      ]}
+    ];
+
+    const exportImportCases = [
+      { statement: 'Indonesia menjual kopi ke Amerika Serikat', answer: 'ekspor', explain: 'Benar! Ini adalah EKSPOR karena barang (kopi) pergi dari Indonesia ke luar negeri.' },
+      { statement: 'Indonesia membeli gandum dari Australia', answer: 'impor', explain: 'Benar! Ini adalah IMPOR karena barang (gandum) masuk dari luar negeri ke Indonesia.' },
+      { statement: 'Batik Indonesia dijual di Jepang', answer: 'ekspor', explain: 'Benar! Ini adalah EKSPOR karena barang Indonesia (batik) dikirim ke Jepang.' },
+      { statement: 'Mobil Toyota dari Jepang dijual di Indonesia', answer: 'impor', explain: 'Benar! Ini adalah IMPOR karena barang (mobil) masuk dari Jepang ke Indonesia.' },
+      { statement: 'Ikan tuna Indonesia dikirim ke Korea Selatan', answer: 'ekspor', explain: 'Benar! EKSPOR karena barang pergi dari Indonesia ke Korea.' },
+      { statement: 'Obat-obatan dari Jerman masuk ke Indonesia', answer: 'impor', explain: 'Benar! IMPOR karena obat masuk ke Indonesia dari Jerman.' }
+    ];
+
+    const activityStories = {
+      'ekspor-kopi': {
+        title: '☕ Perjalanan Kopi Indonesia ke Amerika',
+        steps: [
+          { no: 1, title: 'Petani Menanam', emoji: '🌾', desc: 'Petani di Sumatera menanam biji kopi dengan hati-hati.' },
+          { no: 2, title: 'Panen & Olah', emoji: '🔄', desc: 'Kopi dipanen saat sudah matang, lalu dijemur dan diproses.' },
+          { no: 3, title: 'Pengemasan', emoji: '📦', desc: 'Kopi yang sudah siap dikemas dalam karung dan kotak.' },
+          { no: 4, title: 'Ekspor', emoji: '✈️', desc: 'Kopi dikirim via kapal atau pesawat menuju Amerika.' },
+          { no: 5, title: 'Jual di Kafe', emoji: '☕', desc: 'Kopi dijual di kafe-kafe premium di Amerika dengan harga tinggi.' }
+        ]
+      },
+      'impor-gandum': {
+        title: '🌾 Perjalanan Gandum dari Australia ke Indonesia',
+        steps: [
+          { no: 1, title: 'Panen di Australia', emoji: '🌾', desc: 'Petani Australia memanen gandum dari ladang yang luas.' },
+          { no: 2, title: 'Pengiriman', emoji: '🚢', desc: 'Gandum dikemas dan dikirim dengan kapal besar ke Indonesia.' },
+          { no: 3, title: 'Bea Cukai', emoji: '🛃', desc: 'Gandum diperiksa di pelabuhan Indonesia untuk keamanan.' },
+          { no: 4, title: 'Distribusi', emoji: '🏭', desc: 'Gandum dibawa ke pabrik tepung dan penggilingan.' },
+          { no: 5, title: 'Jadi Roti', emoji: '🍞', desc: 'Gandum dijadikan tepung untuk membuat roti yang kita makan.' }
+        ]
+      },
+      'ekspor-batik': {
+        title: '🎨 Perjalanan Batik Indonesia ke Jepang',
+        steps: [
+          { no: 1, title: 'Membuat Desain', emoji: '🎨', desc: 'Pengrajin membuat desain batik tradisional yang indah.' },
+          { no: 2, title: 'Proses Batik', emoji: '🖌️', desc: 'Kain diwarnai dan dibatik dengan teknik tradisional.' },
+          { no: 3, title: 'Kualitas Check', emoji: '✅', desc: 'Batik diperiksa untuk memastikan kualitas sempurna.' },
+          { no: 4, title: 'Pengiriman', emoji: '📦', desc: 'Batik dikemas cantik dan dikirim ke Jepang.' },
+          { no: 5, title: 'Jadi Fashion', emoji: '👗', desc: 'Batik dijual sebagai koleksi fashion premium di Jepang.' }
+        ]
+      },
+      'impor-mobil': {
+        title: '🚗 Perjalanan Mobil dari Jepang ke Indonesia',
+        steps: [
+          { no: 1, title: 'Produksi', emoji: '🏭', desc: 'Mobil diproduksi di pabrik modern Jepang.' },
+          { no: 2, title: 'Quality Check', emoji: '✅', desc: 'Mobil diperiksa dan ditest untuk memastikan sempurna.' },
+          { no: 3, title: 'Pengiriman', emoji: '🚢', desc: 'Mobil dikirim dengan kapal khusus ke Indonesia.' },
+          { no: 4, title: 'Bea Cukai', emoji: '🛃', desc: 'Mobil diperiksa di pelabuhan dan dibayar bea masuk.' },
+          { no: 5, title: 'Jual di Dealer', emoji: '🚙', desc: 'Mobil dijual di dealer dan dimiliki oleh konsumen Indonesia.' }
+        ]
+      }
+    };
+
+    // ===== STATE & CONFIG =====
+    let currentPage = 'beranda';
+    let modalOpen = false;
+    let currentModal = null;
+    let progress = { expandedProducts: [], expandedCountries: [], scenarioAnswers: [], caseAnswers: [] };
+    let classificationAnswers = {};
+
+    // Load progress dari localStorage
+    function loadProgress() {
+      const saved = localStorage.getItem('elearning_progress');
+      if (saved) progress = JSON.parse(saved);
+    }
+
+    // Save progress ke localStorage
+    function saveProgress() {
+      localStorage.setItem('elearning_progress', JSON.stringify(progress));
+    }
+
+    let config = {
+      app_title: 'Media Pembelajaran Interaktif Perdagangan Internasional',
+      app_subtitle: 'Belajar Ekspor & Impor',
+      footer_text: '© EduTrade — Media Pembelajaran Ekspor & Impor untuk Siswa 🌏',
+      hero_title: 'Belajar Ekspor & Impor',
+      hero_subtitle: 'Pelajari Perdagangan Internional dengan Mudah dan Menyenangkan',
+      video_title: 'Video Pembelajaran Ekspor & Impor',
+      video_description: 'Pelajari lebih lanjut tentang kegiatan perdagangan internasional melalui video pembelajaran kami.',
+      primary_color: '#1e40af',
+      secondary_color: '#ffffff',
+      accent_color: '#fbbf24',
+      text_color: '#1e293b',
+      background_color: '#f0f9ff',
+      ekspor_title: 'Materi Ekspor',
+      ekspor_desc: 'Ekspor adalah kegiatan menjual atau mengirim barang dari dalam negeri ke luar negeri. Pelakunya disebut eksportir.',
+      impor_title: 'Materi Impor',
+      impor_desc: 'Impor adalah kegiatan membeli atau mendatangkan barang dari luar negeri ke dalam negeri. Pelakunya disebut importir.'
+    };
+
+    const $ = id => document.getElementById(id);
+
+    // ===== FUNGSI MODAL =====
+    function openModal(type, id) {
+      if (type === 'export-product') {
+        const prod = exportProducts[id];
+        let reflectionHtml = '';
+        if (prod.reflectionQ) {
+          reflectionHtml = `
+            <div class="rounded-lg p-4 border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+              <h3 class="font-bold mb-3" style="color: var(--primary);">💭 Pertanyaan Refleksi</h3>
+              <p class="mb-3 font-semibold" style="color: var(--text);">${prod.reflectionQ}</p>
+              <div class="space-y-2" id="reflection-${id}">
+                ${prod.reflectionOptions.map((opt, idx) => `
+                  <button onclick="answerReflection('${id}', ${idx})" class="w-full text-left px-3 py-2 rounded-lg border-2 hover:opacity-80 transition font-semibold text-sm" style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    ${String.fromCharCode(65 + idx)}. ${opt.text}
+                  </button>
+                `).join('')}
+              </div>
+              <div id="reflection-feedback-${id}" class="mt-3 hidden"></div>
+            </div>
+          `;
+          progress.expandedProducts[id] = true;
+        }
+        const html = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="text-5xl">${prod.emoji}</div>
+            <button onclick="closeModal()" class="text-2xl hover:opacity-70">✕</button>
+          </div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">${prod.name}</h2>
+          <p class="text-sm mb-4" style="color: var(--text);">${prod.desc}</p>
+          
+          <div class="space-y-4 text-sm" style="color: var(--text);">
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🌏 Negara Tujuan</h3>
+              <div class="flex flex-wrap gap-2 mt-2">${prod.negara.map(n => `<span class="px-2 py-1 rounded text-xs font-semibold text-white" style="background-color: var(--primary);">${n}</span>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🤔 Mengapa Diekspor?</h3>
+              <p>${prod.alasan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🛠️ Kegunaan di Negara Tujuan</h3>
+              <p>${prod.kegunaan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">✅ Manfaat Bagi Indonesia</h3>
+              <div class="space-y-1">${prod.manfaat.split('|').map(m => `<div>${m.trim()}</div>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(255,152,0,0.1);">
+              <h3 class="font-bold mb-1" style="color: #ff9800;">⚠️ Tantangan yang Harus Diperhatikan</h3>
+              <p>${prod.tantangan}</p>
+            </div>
+            
+            ${reflectionHtml}
+          </div>
+          
+          <button onclick="speakText('${(prod.desc + '. ' + prod.alasan + '. Kegunaan: ' + prod.kegunaan).replace(/'/g, "\\'")}')" class="audio-control w-full mt-4">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span>🔊 Dengarkan Penjelasan</span>
+          </button>
+        `;
+        showModal(html);
+      } else if (type === 'export-country') {
+        const country = exportCountries[id];
+        const html = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="text-5xl">${country.emoji}</div>
+            <button onclick="closeModal()" class="text-2xl hover:opacity-70">✕</button>
+          </div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">${country.name}</h2>
+          
+          <div class="space-y-4 text-sm" style="color: var(--text);">
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">📦 Barang Ekspor</h3>
+              <div class="flex flex-wrap gap-2 mt-2">${country.barang.map(b => `<span class="px-2 py-1 rounded text-xs font-semibold text-white" style="background-color: var(--primary);">${b}</span>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🤔 Mengapa?</h3>
+              <p>${country.alasan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">🤝 Hubungan Perdagangan</h3>
+              <p>${country.hubungan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">💚 Manfaat</h3>
+              <p>${country.manfaat}</p>
+            </div>
+            
+            <div class="rounded-lg p-3 border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+              <h3 class="font-bold mb-3" style="color: var(--primary);">💭 Pertanyaan Refleksi</h3>
+              <p class="mb-3 font-semibold" style="color: var(--text);">"${country.refleksi}"</p>
+            </div>
+          </div>
+          
+          <button onclick="speakText('${(country.alasan + '. ' + country.hubungan + '. ' + country.manfaat).replace(/'/g, "\\'")}')" class="audio-control w-full mt-4">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span>🔊 Dengarkan Penjelasan</span>
+          </button>
+        `;
+        showModal(html);
+      } else if (type === 'import-product') {
+        const prod = importProducts[id];
+        const html = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="text-5xl">${prod.emoji}</div>
+            <button onclick="closeModal()" class="text-2xl hover:opacity-70">✕</button>
+          </div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">${prod.name}</h2>
+          <p class="text-sm mb-4" style="color: var(--text);">${prod.desc}</p>
+          
+          <div class="space-y-4 text-sm" style="color: var(--text);">
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🤔 Alasan Diimpor</h3>
+              <p>${prod.alasan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🌍 Negara Asal</h3>
+              <div class="flex flex-wrap gap-2 mt-2">${prod.negara.map(n => `<span class="px-2 py-1 rounded text-xs font-semibold text-white" style="background-color: var(--primary);">${n}</span>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">💡 Kegunaan</h3>
+              <p>${prod.kegunaan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">✅ Manfaat</h3>
+              <div class="space-y-1">${prod.manfaat.split('|').map(m => `<div>${m.trim()}</div>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(220,38,38,0.1);">
+              <h3 class="font-bold mb-1" style="color: #dc2626;">⚠️ Risiko Ketergantungan</h3>
+              <p>${prod.risiko}</p>
+            </div>
+            
+            <div class="rounded-lg p-3 border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">💭 Refleksi</h3>
+              <p><i>"${prod.refleksi}"</i></p>
+            </div>
+          </div>
+          
+          <button onclick="speakText('${(prod.desc + '. ' + prod.alasan + '. Kegunaan: ' + prod.kegunaan).replace(/'/g, "\\'")}')" class="audio-control w-full mt-4">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span>🔊 Dengarkan Penjelasan</span>
+          </button>
+        `;
+        showModal(html);
+      } else if (type === 'import-country') {
+        const country = importCountries[id];
+        const html = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="text-5xl">${country.emoji}</div>
+            <button onclick="closeModal()" class="text-2xl hover:opacity-70">✕</button>
+          </div>
+          <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">${country.name}</h2>
+          
+          <div class="space-y-4 text-sm" style="color: var(--text);">
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">📦 Barang Impor</h3>
+              <div class="flex flex-wrap gap-2 mt-2">${country.barang.map(b => `<span class="px-2 py-1 rounded text-xs font-semibold text-white" style="background-color: var(--primary);">${b}</span>`).join('')}</div>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: var(--primary-light);">
+              <h3 class="font-bold mb-1" style="color: var(--primary);">🤔 Mengapa?</h3>
+              <p>${country.alasan}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">🍔 Contoh Sehari-hari</h3>
+              <p>${country.contoh}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(76,175,80,0.1);">
+              <h3 class="font-bold mb-1" style="color: #4caf50;">💚 Manfaat</h3>
+              <p>${country.manfaat}</p>
+            </div>
+            
+            <div class="rounded-lg p-3" style="background-color: rgba(220,38,38,0.1);">
+              <h3 class="font-bold mb-1" style="color: #dc2626;">⚠️ Risiko</h3>
+              <p>${country.risiko}</p>
+            </div>
+            
+            <div class="rounded-lg p-3 border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+              <h3 class="font-bold mb-3" style="color: var(--primary);">💭 Pertanyaan Refleksi</h3>
+              <p class="mb-3 font-semibold" style="color: var(--text);">"${country.refleksi}"</p>
+            </div>
+          </div>
+          
+          <button onclick="speakText('${(country.alasan + '. ' + country.contoh + '. ' + country.manfaat).replace(/'/g, "\\'")}')" class="audio-control w-full mt-4">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span>🔊 Dengarkan Penjelasan</span>
+          </button>
+        `;
+        showModal(html);
+      }
+    }
+
+    function showModal(html) {
+      let modal = $('detail-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'detail-modal';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `<div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fadeIn">${html}</div>`;
+      modal.style.display = 'block';
+      modal.firstChild.innerHTML = `<div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl p-6 animate-slideUp">${html}</div>`;
+      modalOpen = true;
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      const modal = $('detail-modal');
+      if (modal) modal.style.display = 'none';
+      modalOpen = false;
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOpen) closeModal();
+    });
+
+    const pages = [
+      ['beranda', 'Beranda', 'home'],
+      ['video', 'Video', 'play-circle'],
+      ['ekspor', 'Materi Ekspor', 'ship'],
+      ['impor', 'Materi Impor', 'plane'],
+      ['perbedaan', 'Perbedaan', 'git-compare'],
+      ['manfaat', 'Manfaat', 'sparkles'],
+      ['contoh', 'Contoh Kegiatan', 'package'],
+      ['kuis', 'Kuis', 'help-circle'],
+      ['hasil', 'Hasil', 'award']
+    ];
+
+    const narrations = {
+      beranda: 'Selamat datang di pembelajaran ekspor dan impor. Materi ini akan membantu kamu memahami kegiatan perdagangan internasional.',
+      ekspor: 'Ekspor adalah kegiatan menjual atau mengirim barang dari dalam negeri ke luar negeri. Indonesia mengekspor banyak produk seperti minyak sawit, kopi, dan tekstil ke berbagai negara di seluruh dunia.',
+      impor: 'Impor adalah kegiatan membeli atau mendatangkan barang dari luar negeri ke dalam negeri. Indonesia mengimpor barang seperti gandum, mesin, dan suku cadang dari negara lain.',
+      perbedaan: 'Perbedaan utama ekspor dan impor: ekspor adalah menjual ke luar negeri sehingga devisa bertambah, sedangkan impor adalah membeli dari luar negeri sehingga devisa berkurang.',
+      manfaat: 'Manfaat ekspor dan impor bagi masyarakat adalah mendapatkan pilihan barang lebih banyak dan harga lebih terjangkau. Bagi perusahaan, pasar menjadi lebih luas. Bagi negara, dapat menambah devisa dan meningkatkan ekonomi.',
+      contoh: 'Contoh ekspor Indonesia: kopi ke Amerika, minyak sawit ke India, dan batik ke Jepang. Contoh impor: mobil dari Jepang, smartphone dari Tiongkok, dan gandum dari Australia.',
+      video: 'Tonton video pembelajaran ini untuk memahami lebih dalam tentang ekspor dan impor dalam dunia perdagangan internasional.',
+      kuis: 'Sekarang saatnya menguji pemahamanmu tentang ekspor dan impor. Pilih jawaban yang paling tepat untuk setiap pertanyaan.',
+      hasil: 'Kuis telah selesai. Lihat hasilmu dan pelajari kembali materi yang masih kurang dipahami.'
+    };
+
+    const quizQuestions = [
+      { q: 'Apa yang dimaksud dengan ekspor?', o: ['Membeli barang dari luar negeri', 'Menjual barang ke luar negeri', 'Menukar uang asing', 'Mengirim surat ke negara lain'], a: 1 },
+      { q: 'Apa yang dimaksud dengan impor?', o: ['Menjual barang ke luar negeri', 'Membeli atau mendatangkan barang dari luar negeri', 'Membuat barang di dalam negeri', 'Menyimpan barang di gudang'], a: 1 },
+      { q: 'Salah satu contoh barang ekspor Indonesia adalah...', o: ['Minyak sawit', 'Salju', 'Mobil mewah dari Eropa', 'Gandum dari Amerika'], a: 0 },
+      { q: 'Manakah yang termasuk barang impor Indonesia?', o: ['Kopi', 'Karet', 'Gandum', 'Batik'], a: 2 },
+      { q: 'Negara tujuan ekspor utama Indonesia antara lain...', o: ['Tiongkok, Amerika Serikat, Jepang', 'Antartika dan Greenland', 'Hanya negara Afrika', 'Hanya negara ASEAN'], a: 0 },
+      { q: 'Tujuan utama suatu negara melakukan ekspor adalah...', o: ['Mengurangi jumlah penduduk', 'Menambah devisa negara', 'Menghilangkan barang', 'Menutup perdagangan'], a: 1 },
+      { q: 'Mengapa suatu negara melakukan impor?', o: ['Karena ingin memusnahkan barang', 'Karena tidak bisa memproduksi sendiri atau kebutuhan belum terpenuhi', 'Karena barang dalam negeri berlebih', 'Karena larangan pemerintah'], a: 1 },
+      { q: 'Pihak yang melakukan kegiatan ekspor disebut...', o: ['Importir', 'Eksportir', 'Distributor', 'Konsumen'], a: 1 },
+      { q: 'Salah satu dampak positif ekspor bagi negara adalah...', o: ['Mengurangi lapangan kerja', 'Menambah devisa dan memperluas pasar', 'Menurunkan kualitas produk', 'Menghabiskan sumber daya'], a: 1 },
+      { q: 'Alat transportasi yang sering digunakan untuk kegiatan ekspor-impor adalah...', o: ['Sepeda', 'Kapal laut dan pesawat kargo', 'Becak', 'Kereta mini'], a: 1 }
+    ];
+
+    let quizState = { current: 0, answers: Array(10).fill(null), score: 0, finished: false };
+
+    function applyConfig() {
+      document.documentElement.style.setProperty('--primary', config.primary_color);
+      document.documentElement.style.setProperty('--secondary', config.secondary_color);
+      document.documentElement.style.setProperty('--accent', config.accent_color);
+      document.documentElement.style.setProperty('--text', config.text_color);
+      document.documentElement.style.setProperty('--bg', config.background_color);
+      
+      const primaryRGB = hexToRgb(config.primary_color);
+      document.documentElement.style.setProperty('--primary-light', `rgba(${primaryRGB.r}, ${primaryRGB.g}, ${primaryRGB.b}, 0.1)`);
+      
+      document.body.style.backgroundColor = config.background_color;
+      $('app-title').textContent = config.app_title;
+      $('app-title').style.color = config.primary_color;
+      $('app-subtitle').textContent = config.app_subtitle;
+      $('footer-text').textContent = config.footer_text;
+      $('main-content').style.color = config.text_color;
+    }
+
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : { r: 30, g: 64, b: 175 };
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.9;
+      utterance.onend = () => document.querySelectorAll('.audio-control').forEach(b => b.classList.remove('playing'));
+      speechSynthesis.speak(utterance);
+    }
+
+    function audioButton(id) {
+      const text = (narrations[id] || '').replace(/'/g, "\\'");
+      return text ? `<button class="audio-control" onclick="speakText('${text}');this.classList.add('playing')"><i data-lucide="volume-2" class="w-4 h-4"></i><span>🔊 Dengarkan Penjelasan</span></button>` : '';
+    }
+
+    function renderNav() {
+      $('nav-buttons').innerHTML = pages.map(([id, label, icon]) => `
+        <button data-page="${id}" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-1.5 transition" style="background-color: ${currentPage == id ? config.primary_color : 'transparent'}; color: ${currentPage == id ? config.secondary_color : config.text_color};">
+          <i data-lucide="${icon}" class="w-4 h-4"></i><span class="hidden sm:inline">${label}</span>
+        </button>`).join('');
+      document.querySelectorAll('#nav-buttons button').forEach(b => b.onclick = () => goTo(b.dataset.page));
+      lucide.createIcons();
+    }
+
+    function goTo(id) {
+      currentPage = id;
+      renderNav();
+      renderPage();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function navButtons(prev, next) {
+      return `<div class="flex justify-between items-center mt-8 pt-6 border-t-2 border-dashed" style="border-color: var(--primary-light);">
+        ${prev ? `<button onclick="goTo('${prev}')" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold hover:opacity-80 transition shadow-sm" style="background-color: var(--secondary); border: 2px solid var(--primary); color: var(--primary);"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>` : '<div></div>'}
+        ${next ? `<button onclick="goTo('${next}')" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">Next <i data-lucide="arrow-right" class="w-4 h-4"></i></button>` : '<div></div>'}
+      </div>`;
+    }
+
+    function hero(cls, badge, title, desc, emoji = '') {
+      return `<div class="${cls} text-white rounded-2xl p-6 md:p-8 mb-6 shadow-lg relative overflow-hidden">
+        ${emoji ? `<div class="absolute right-4 top-4 text-6xl opacity-30">${emoji}</div>` : ''}
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2" style="background-color: var(--accent); color: var(--text);">${badge}</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold">${title}</h2>
+        <p class="text-white/90 mt-1">${desc}</p>
+      </div>`;
+    }
+
+    function card(emoji, title, body) {
+      return `<div class="rounded-2xl p-6 shadow-md card-hover border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+        <div class="flex items-center gap-2 mb-3"><span class="text-3xl">${emoji}</span><h3 class="text-xl font-bold" style="color: var(--primary);">${title}</h3></div>${body}
+      </div>`;
+    }
+
+    function tags(items) {
+      return `<div class="flex flex-wrap gap-2">${items.map(x => `<span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: var(--primary); color: white; opacity: 0.8;">${x}</span>`).join('')}</div>`;
+    }
+
+    function list(items) {
+      return `<ul class="space-y-1.5 text-sm" style="color: var(--text);">${items.map(x => `<li>${x}</li>`).join('')}</ul>`;
+    }
+
+    function countryGrid(items) {
+      return `<div class="grid grid-cols-2 gap-2 text-sm">${items.map(x => `<div class="rounded-lg p-2" style="background-color: var(--primary); color: white; opacity: 0.8;">${x}</div>`).join('')}</div>`;
+    }
+
+    function steps(items, title) {
+      return `<div class="rounded-2xl p-6 mt-6 border-2" style="background: linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.3)); border-color: var(--primary);">
+        <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🔄 ${title}</h3>
+        <div class="grid md:grid-cols-5 gap-3">${items.map((s, i) => `
+          <div class="rounded-xl p-4 text-center shadow-sm" style="background-color: var(--secondary);">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold mx-auto mb-2 text-white" style="background-color: var(--primary);">${i + 1}</div>
+            <div class="text-3xl mb-1">${s[1]}</div>
+            <div class="font-bold text-sm" style="color: var(--primary);">${s[0]}</div>
+            <div class="text-xs" style="color: #64748b;">${s[2]}</div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    function pageBeranda() {
+      const fitur = [['📚', '5 Bab Materi', 'Materi lengkap tentang ekspor, impor, perbedaan, manfaat, dan contohnya.'], ['🎬', 'Video Pembelajaran', 'Tonton video menarik tentang kegiatan perdagangan internasional.'], ['🎯', 'Kuis Interaktif', 'Uji pemahamanmu dengan 10 soal menarik tentang materi.']];
+      const belajar = [['📤', 'Ekspor', 'Bagaimana Indonesia menjual produk ke luar negeri'], ['📥', 'Impor', 'Bagaimana Indonesia membeli barang dari negara lain'], ['🔍', 'Perbedaan', 'Apa saja perbedaan ekspor dan impor'], ['✨', 'Manfaat', 'Keuntungan ekspor dan impor bagi negara kita']];
+      return `<section class="page">
+        <div class="rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl mb-6 wave-bg">
+          <div class="absolute inset-0 dots-pattern opacity-20"></div>
+          <div class="relative text-center py-8">
+            <div class="text-8xl md:text-9xl mb-4 float">🚢</div>
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">${config.hero_title}</h1>
+            <p class="text-white/90 mt-3 text-lg">${config.hero_subtitle}</p>
+          </div>
+        </div>
+        ${audioButton('beranda')}
+        <div class="grid md:grid-cols-3 gap-5 my-6">${fitur.map(f => `<div class="rounded-2xl p-6 shadow-md card-hover border-t-4" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);"><div class="text-5xl mb-3">${f[0]}</div><h3 class="text-lg font-bold mb-2" style="color: var(--primary);">${f[1]}</h3><p class="text-sm">${f[2]}</p></div>`).join('')}</div>
+        <div class="rounded-2xl p-6 md:p-8 mb-6 border-l-8" style="background: linear-gradient(to right, rgba(255,193,7,0.1), rgba(255,152,0,0.1)); border-color: var(--accent);">
+          <h2 class="text-2xl font-bold mb-4" style="color: var(--primary);">🎓 Apa yang Akan Kamu Pelajari?</h2>
+          <div class="grid md:grid-cols-2 gap-3">${belajar.map(x => `<div class="flex items-start gap-3"><span class="text-2xl">${x[0]}</span><div><h4 class="font-bold" style="color: var(--primary);">${x[1]}</h4><p class="text-sm" style="color: var(--text);">${x[2]}</p></div></div>`).join('')}</div>
+        </div>
+        <div class="rounded-2xl p-6 md:p-8 mb-6 border-l-8" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+          <h2 class="text-2xl font-bold mb-3" style="color: var(--primary);">💡 Mengapa Penting?</h2>
+          <p class="leading-relaxed">Ekspor dan impor adalah bagian penting dari ekonomi Indonesia. Barang yang kamu gunakan setiap hari bisa saja hasil dari kegiatan ekspor atau impor! 🌍</p>
+        </div>
+        ${navButtons(null, 'video')}
+      </section>`;
+    }
+
+    function pageEkspor() {
+      const miniGameEkspor = [
+        { item: 'Kopi', answer: 'ekspor', reason: 'Benar! Kopi adalah salah satu ekspor unggulan Indonesia ke berbagai negara.' },
+        { item: 'Minyak Sawit', answer: 'ekspor', reason: 'Benar! Indonesia adalah pengekspor minyak sawit terbesar di dunia.' },
+        { item: 'Batik', answer: 'ekspor', reason: 'Benar! Batik Indonesia dijual sebagai produk fashion premium ke seluruh dunia.' },
+        { item: 'Gandum', answer: 'bukan', reason: 'Benar! Gandum bukan ekspor utama Indonesia, justru Indonesia banyak mengimpor gandum.' },
+        { item: 'Mobil dari Jepang', answer: 'bukan', reason: 'Benar! Mobil dari Jepang adalah barang IMPOR bagi Indonesia, bukan ekspor.' }
+      ];
+
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 1', config.ekspor_title, 'Menjual barang ke luar negeri 📤', '🚢')}
+        ${audioButton('ekspor')}
+        <div class="grid md:grid-cols-2 gap-5">
+          ${card('📖', 'Pengertian Ekspor', `<p class="text-sm leading-relaxed" style="color: var(--text);">${config.ekspor_desc}</p>`)}
+          ${card('🎯', 'Tujuan Ekspor', list(['✅ Menambah <b>devisa negara</b>', '✅ Memperluas pasar produk dalam negeri', '✅ Meningkatkan pendapatan produsen', '✅ Membuka lapangan kerja']))}
+          ${card('✨', 'Manfaat Ekspor', list(['🌟 Meningkatkan perekonomian negara', '🌟 Mendorong produksi barang berkualitas', '🌟 Menjalin hubungan baik antarnegara', '🌟 Meningkatkan teknologi & industri']))}
+          
+          <div class="rounded-2xl p-6 shadow-md border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+            <h3 class="font-bold mb-3" style="color: var(--primary);">📦 Contoh Barang Ekspor Indonesia</h3>
+            <div class="flex flex-wrap gap-2">${Object.keys(exportProducts).map(key => {
+              const prod = exportProducts[key];
+              return `<button onclick="openModal('export-product', '${key}')" class="px-3 py-2 rounded-full text-sm font-semibold text-white hover:opacity-80 hover:scale-105 transition cursor-pointer" style="background-color: var(--primary); opacity: 0.8;">
+                ${prod.emoji} ${prod.name} <span style="opacity: 0.7;">📌</span>
+              </button>`;
+            }).join('')}</div>
+            <p class="text-xs mt-3 italic" style="color: #64748b;">💡 Klik barang untuk info detail</p>
+          </div>
+          
+          <div class="rounded-2xl p-6 shadow-md border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+            <h3 class="font-bold mb-3" style="color: var(--primary);">🌏 Negara Tujuan Ekspor</h3>
+            <div class="grid grid-cols-2 gap-2">${Object.keys(exportCountries).map(key => {
+              const country = exportCountries[key];
+              return `<button onclick="openModal('export-country', '${key}')" class="p-2 rounded-lg text-center hover:opacity-80 hover:scale-105 transition cursor-pointer" style="background-color: var(--primary); color: white; opacity: 0.8; font-size: 0.8rem; font-weight: 600;">
+                ${country.emoji}<br>${country.name.split(' ')[0]} <span style="opacity: 0.7;">📌</span>
+              </button>`;
+            }).join('')}</div>
+            <p class="text-xs mt-3 italic" style="color: #64748b;">💡 Klik negara untuk info detail</p>
+          </div>
+        </div>
+        
+        <!-- SIMULASI ALUR EKSPOR -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: var(--accent);">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🔄 Simulasi Alur Ekspor</h3>
+          <div class="rounded-xl p-4 mb-4" style="background-color: var(--primary-light);">
+            <p class="text-sm font-semibold" style="color: var(--text);">Bagaimana perjalanan barang Indonesia menuju negara lain? Mari kita lihat alurnya! 👇</p>
+          </div>
+          
+          <div id="export-flow-visual" class="flow-stepper" style="margin-bottom: 2rem;">
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-icon">🚜</div>
+                <div class="flow-step-title">Petani/<br>Produsen</div>
+                <div class="flow-step-desc">Menyiapkan barang</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-icon">🏢</div>
+                <div class="flow-step-title">Eksportir</div>
+                <div class="flow-step-desc">Mengurus & mengemas</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-icon">🛃</div>
+                <div class="flow-step-title">Bea Cukai</div>
+                <div class="flow-step-desc">Periksaan dokumen</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-icon">⛴️</div>
+                <div class="flow-step-title">Kapal/<br>Pesawat</div>
+                <div class="flow-step-desc">Pengiriman</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">5</div>
+                <div class="flow-step-icon">🌍</div>
+                <div class="flow-step-title">Negara<br>Tujuan</div>
+                <div class="flow-step-desc">Tiba & diterima</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">6</div>
+                <div class="flow-step-icon">🛍️</div>
+                <div class="flow-step-title">Pembeli<br>Luar Negeri</div>
+                <div class="flow-step-desc">Konsumsi produk</div>
+              </div>
+            </div>
+          </div>
+          
+          <button onclick="showExportFlowSteps()" class="w-full px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">
+            📖 Lihat Penjelasan Lengkap
+          </button>
+        </div>
+        
+        <!-- MINI GAME EKSPOR -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: #8b5cf6;">
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2" style="color: var(--primary);">🎮 Game: Barang Ekspor atau Bukan?</h3>
+          <p class="text-sm mb-4" style="color: var(--text);">Lihat barang berikut. Apakah itu barang ekspor Indonesia atau bukan? Klik jawaban yang benar! 🎯</p>
+          
+          <div class="space-y-3">
+            ${miniGameEkspor.map((game, idx) => `
+              <div class="rounded-lg p-4 border-2 bg-white" style="border-color: var(--primary-light);">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-bold text-lg" style="color: var(--text);">${game.item}</div>
+                  <span class="text-xs font-bold px-2 py-1 rounded" style="background-color: var(--primary-light); color: var(--primary);">Soal ${idx + 1}</span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <button data-ekspor-game="${idx}" data-answer="ekspor" onclick="answerExportGame(${idx}, 'ekspor')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    📤 Ekspor
+                  </button>
+                  <button data-ekspor-game="${idx}" data-answer="bukan" onclick="answerExportGame(${idx}, 'bukan')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    ❌ Bukan Ekspor
+                  </button>
+                </div>
+                
+                <div id="ekspor-game-feedback-${idx}" class="mt-3 hidden"></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        ${steps([['Pesanan', '📝', 'Importir memesan barang'], ['Produksi', '🏭', 'Eksportir menyiapkan barang'], ['Pengurusan', '📋', 'Dokumen & bea cukai'], ['Pengiriman', '🚢', 'Kapal/pesawat kargo'], ['Pembayaran', '💰', 'Diterima eksportir']], 'Proses Sederhana Kegiatan')}
+        <div class="border-l-8 rounded-2xl p-6 mt-6" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+          <h3 class="text-xl font-bold mb-3" style="color: var(--primary);">🌟 Dampak Positif Ekspor bagi Negara</h3>
+          <div class="grid md:grid-cols-2 gap-2 text-sm">${['💵 Menambah devisa negara', '📈 Mendorong pertumbuhan ekonomi', '👷 Membuka lapangan pekerjaan', '🏭 Mengembangkan industri dalam negeri', '🤝 Mempererat kerja sama internasional', '🛠️ Meningkatkan kualitas produk lokal'].map(x => `<div>${x}</div>`).join('')}</div>
+        </div>
+        ${navButtons('video', 'impor')}
+      </section>`;
+    }
+
+    function answerExportGame(idx, answer) {
+      const miniGameEkspor = [
+        { item: 'Kopi', answer: 'ekspor', reason: 'Benar! Kopi adalah salah satu ekspor unggulan Indonesia ke berbagai negara.' },
+        { item: 'Minyak Sawit', answer: 'ekspor', reason: 'Benar! Indonesia adalah pengekspor minyak sawit terbesar di dunia.' },
+        { item: 'Batik', answer: 'ekspor', reason: 'Benar! Batik Indonesia dijual sebagai produk fashion premium ke seluruh dunia.' },
+        { item: 'Gandum', answer: 'bukan', reason: 'Benar! Gandum bukan ekspor utama Indonesia, justru Indonesia banyak mengimpor gandum.' },
+        { item: 'Mobil dari Jepang', answer: 'bukan', reason: 'Benar! Mobil dari Jepang adalah barang IMPOR bagi Indonesia, bukan ekspor.' }
+      ];
+      
+      const data = miniGameEkspor[idx];
+      const isCorrect = answer === data.answer;
+      const feedback = document.getElementById(`ekspor-game-feedback-${idx}`);
+      
+      // Disable semua tombol
+      document.querySelectorAll(`button[data-ekspor-game="${idx}"]`).forEach(btn => {
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+        if (btn.dataset.answer === data.answer) {
+          btn.style.backgroundColor = '#16a34a';
+          btn.style.borderColor = '#15803d';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        } else if (btn.dataset.answer === answer && answer !== data.answer) {
+          btn.style.backgroundColor = '#dc2626';
+          btn.style.borderColor = '#b91c1c';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        }
+      });
+      
+      if (feedback) {
+        const bgColor = isCorrect ? 'rgba(22,163,74,0.15)' : 'rgba(220,38,38,0.15)';
+        const borderColor = isCorrect ? '#16a34a' : '#dc2626';
+        const textColor = isCorrect ? '#16a34a' : '#dc2626';
+        const emoji = isCorrect ? '✅' : '❌';
+        
+        feedback.innerHTML = `
+          <div class="rounded-lg p-3 font-semibold text-sm flex items-start gap-2" style="background-color: ${bgColor}; border-left: 4px solid ${borderColor}; color: ${textColor};">
+            <span class="text-lg">${emoji}</span>
+            <span>${data.reason}</span>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+      }
+    }
+
+    function showExportFlowSteps() {
+      const steps = [
+        { emoji: '🚜', title: 'Tahap 1: Petani/Produsen', desc: 'Petani atau produsen di Indonesia mempersiapkan barang yang akan diekspor.' },
+        { emoji: '🏢', title: 'Tahap 2: Eksportir', desc: 'Perusahaan eksportir menerima barang dari produsen dan mempersiapkan untuk pengiriman.' },
+        { emoji: '📋', title: 'Tahap 3: Dokumen & Perizinan', desc: 'Semua dokumen ekspor disiapkan dan diperiksa oleh bea cukai Indonesia.' },
+        { emoji: '📦', title: 'Tahap 4: Pengemasan', desc: 'Barang dikemas dengan aman dan diberi label sesuai standar internasional.' },
+        { emoji: '⛴️', title: 'Tahap 5: Pengiriman', desc: 'Barang dimuat ke kapal atau pesawat kargo untuk dikirim ke negara tujuan.' },
+        { emoji: '🛃', title: 'Tahap 6: Bea Cukai Negara Tujuan', desc: 'Barang sampai di pelabuhan negara tujuan dan melalui pemeriksaan bea cukai.' },
+        { emoji: '🏪', title: 'Tahap 7: Distributor', desc: 'Barang diterima oleh distributor atau importir di negara tujuan.' },
+        { emoji: '🛒', title: 'Tahap 8: Penjualan', desc: 'Barang dijual di toko atau pasar dan dinikmati oleh konsumen di negara tujuan!' }
+      ];
+      
+      let html = '<div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl p-6">';
+      html += '<div class="flex justify-between items-start mb-4"><h2 class="text-2xl font-bold" style="color: var(--primary);">📖 Alur Lengkap Ekspor</h2><button onclick="closeExportFlow()" class="text-2xl hover:opacity-70">✕</button></div>';
+      
+      html += '<div class="space-y-3">';
+      steps.forEach(step => {
+        html += `
+          <div class="rounded-lg p-4 border-l-4" style="background-color: var(--primary-light); border-color: var(--primary);">
+            <div class="flex items-start gap-3">
+              <span class="text-3xl">${step.emoji}</span>
+              <div>
+                <h4 class="font-bold" style="color: var(--primary);">${step.title}</h4>
+                <p class="text-sm mt-1" style="color: var(--text);">${step.desc}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      html += '</div></div>';
+      
+      let modal = document.getElementById('export-flow-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'export-flow-modal';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = html;
+    }
+
+    function closeExportFlow() {
+      const modal = document.getElementById('export-flow-modal');
+      if (modal) modal.remove();
+    }
+
+    function pageImpor() {
+      const miniGameImpor = [
+        { item: 'Gandum', answer: 'impor', reason: 'Benar! Gandum adalah salah satu impor utama Indonesia dari Australia.' },
+        { item: 'Mobil dari Jepang', answer: 'impor', reason: 'Benar! Mobil adalah barang impor penting Indonesia dari Jepang dan Korea.' },
+        { item: 'HP dari Tiongkok', answer: 'impor', reason: 'Benar! Smartphone banyak diimpor Indonesia dari Tiongkok.' },
+        { item: 'Batik', answer: 'bukan', reason: 'Benar! Batik adalah barang EKSPOR Indonesia, bukan impor. Batik dibuat di Indonesia!' },
+        { item: 'Kopi Indonesia', answer: 'bukan', reason: 'Benar! Kopi adalah barang EKSPOR Indonesia, bukan impor. Indonesia justru mengekspor kopi.' }
+      ];
+
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 2', config.impor_title, 'Mendatangkan barang dari luar negeri 📥', '✈️')}
+        ${audioButton('impor')}
+        <div class="grid md:grid-cols-2 gap-5">
+          ${card('📖', 'Pengertian Impor', `<p class="text-sm leading-relaxed" style="color: var(--text);">${config.impor_desc}</p>`)}
+          ${card('🎯', 'Tujuan Impor', list(['✅ Memenuhi kebutuhan dalam negeri', '✅ Mendapatkan bahan baku industri', '✅ Memperoleh teknologi modern', '✅ Menstabilkan harga barang']))}
+          ${card('✨', 'Manfaat Impor', list(['🌟 Memenuhi kebutuhan yang tidak diproduksi', '🌟 Mendukung industri dalam negeri', '🌟 Menambah pilihan barang', '🌟 Transfer teknologi & ilmu pengetahuan']))}
+          
+          <div class="rounded-2xl p-6 shadow-md border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+            <h3 class="font-bold mb-3" style="color: var(--primary);">📦 Contoh Barang Impor Indonesia</h3>
+            <div class="flex flex-wrap gap-2">${Object.keys(importProducts).map(key => {
+              const prod = importProducts[key];
+              return `<button onclick="openModal('import-product', '${key}')" class="px-3 py-2 rounded-full text-sm font-semibold text-white hover:opacity-80 hover:scale-105 transition cursor-pointer" style="background-color: var(--primary); opacity: 0.8;">
+                ${prod.emoji} ${prod.name} <span style="opacity: 0.7;">📌</span>
+              </button>`;
+            }).join('')}</div>
+            <p class="text-xs mt-3 italic" style="color: #64748b;">💡 Klik barang untuk info detail</p>
+          </div>
+          
+          <div class="rounded-2xl p-6 shadow-md border-l-4" style="background-color: var(--secondary); border-color: var(--primary);">
+            <h3 class="font-bold mb-3" style="color: var(--primary);">🌏 Negara Asal Impor</h3>
+            <div class="grid grid-cols-2 gap-2">${Object.keys(importCountries).map(key => {
+              const country = importCountries[key];
+              return `<button onclick="openModal('import-country', '${key}')" class="p-2 rounded-lg text-center hover:opacity-80 hover:scale-105 transition cursor-pointer" style="background-color: var(--primary); color: white; opacity: 0.8; font-size: 0.8rem; font-weight: 600;">
+                ${country.emoji}<br>${country.name.split(' ')[0]} <span style="opacity: 0.7;">📌</span>
+              </button>`;
+            }).join('')}</div>
+            <p class="text-xs mt-3 italic" style="color: #64748b;">💡 Klik negara untuk info detail</p>
+          </div>
+        </div>
+        
+        <!-- SIMULASI ALUR IMPOR -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: var(--accent);">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🔄 Simulasi Alur Impor</h3>
+          <div class="rounded-xl p-4 mb-4" style="background-color: var(--primary-light);">
+            <p class="text-sm font-semibold" style="color: var(--text);">Bagaimana perjalanan barang dari luar negeri masuk ke Indonesia? Mari kita lihat alurnya! 👇</p>
+          </div>
+          
+          <div id="import-flow-visual" class="flow-stepper" style="margin-bottom: 2rem;">
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-icon">🏭</div>
+                <div class="flow-step-title">Produsen<br>Luar Negeri</div>
+                <div class="flow-step-desc">Produksi barang</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-icon">📦</div>
+                <div class="flow-step-title">Pengemasan</div>
+                <div class="flow-step-desc">Dikemas & dipersiapkan</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-icon">⛴️</div>
+                <div class="flow-step-title">Kapal/<br>Pesawat</div>
+                <div class="flow-step-desc">Pengiriman ke Indo</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-icon">🇮🇩</div>
+                <div class="flow-step-title">Pelabuhan<br>Indonesia</div>
+                <div class="flow-step-desc">Tiba di pelabuhan</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">5</div>
+                <div class="flow-step-icon">🛃</div>
+                <div class="flow-step-title">Bea Cukai</div>
+                <div class="flow-step-desc">Pemeriksaan & cukai</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">6</div>
+                <div class="flow-step-icon">🏪</div>
+                <div class="flow-step-title">Distributor</div>
+                <div class="flow-step-desc">Distribusi ke toko</div>
+              </div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <div class="flow-step-content">
+                <div class="flow-step-number">7</div>
+                <div class="flow-step-icon">👨‍👩‍👧</div>
+                <div class="flow-step-title">Konsumen<br>Indonesia</div>
+                <div class="flow-step-desc">Dibeli konsumen</div>
+              </div>
+            </div>
+          </div>
+          
+          <button onclick="showImportFlowSteps()" class="w-full px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">
+            📖 Lihat Penjelasan Lengkap
+          </button>
+        </div>
+        
+        <!-- MINI GAME IMPOR -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: #8b5cf6;">
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2" style="color: var(--primary);">🎮 Game: Barang Impor atau Bukan?</h3>
+          <p class="text-sm mb-4" style="color: var(--text);">Lihat barang berikut. Apakah itu barang impor Indonesia atau bukan? Klik jawaban yang benar! 🎯</p>
+          
+          <div class="space-y-3">
+            ${miniGameImpor.map((game, idx) => `
+              <div class="rounded-lg p-4 border-2 bg-white" style="border-color: var(--primary-light);">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-bold text-lg" style="color: var(--text);">${game.item}</div>
+                  <span class="text-xs font-bold px-2 py-1 rounded" style="background-color: var(--primary-light); color: var(--primary);">Soal ${idx + 1}</span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <button data-impor-game="${idx}" data-answer="impor" onclick="answerImportGame(${idx}, 'impor')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    📥 Impor
+                  </button>
+                  <button data-impor-game="${idx}" data-answer="bukan" onclick="answerImportGame(${idx}, 'bukan')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    ❌ Bukan Impor
+                  </button>
+                </div>
+                
+                <div id="impor-game-feedback-${idx}" class="mt-3 hidden"></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        ${steps([['Pemesanan', '📝', 'Importir pesan ke luar negeri'], ['Pembayaran', '💳', 'Melalui bank'], ['Pengiriman', '✈️', 'Via kapal/pesawat kargo'], ['Bea Cukai', '🛃', 'Pemeriksaan di pelabuhan'], ['Distribusi', '🏬', 'Barang dijual ke pasar']], 'Proses Sederhana Kegiatan')}
+        <div class="grid md:grid-cols-2 gap-4 mt-6">
+          <div class="border-l-8 rounded-2xl p-6" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+            <h3 class="text-xl font-bold mb-3" style="color: var(--primary);">✅ Dampak Positif Impor</h3>
+            ${list(['✔️ Memenuhi kebutuhan masyarakat', '✔️ Bahan baku industri tersedia', '✔️ Transfer teknologi maju', '✔️ Harga barang lebih stabil'])}
+          </div>
+          <div class="border-l-8 rounded-2xl p-6" style="background-color: var(--secondary); border-color: var(--accent); color: var(--text);">
+            <h3 class="text-xl font-bold mb-3" style="color: var(--primary);">⚠️ Dampak Negatif Impor</h3>
+            ${list(['❌ Produk lokal kalah bersaing', '❌ Devisa negara berkurang', '❌ Ketergantungan pada negara lain', '❌ Industri dalam negeri terhambat'])}
+          </div>
+        </div>
+        ${navButtons('ekspor', 'perbedaan')}
+      </section>`;
+    }
+
+    function answerImportGame(idx, answer) {
+      const miniGameImpor = [
+        { item: 'Gandum', answer: 'impor', reason: 'Benar! Gandum adalah salah satu impor utama Indonesia dari Australia.' },
+        { item: 'Mobil dari Jepang', answer: 'impor', reason: 'Benar! Mobil adalah barang impor penting Indonesia dari Jepang dan Korea.' },
+        { item: 'HP dari Tiongkok', answer: 'impor', reason: 'Benar! Smartphone banyak diimpor Indonesia dari Tiongkok.' },
+        { item: 'Batik', answer: 'bukan', reason: 'Benar! Batik adalah barang EKSPOR Indonesia, bukan impor. Batik dibuat di Indonesia!' },
+        { item: 'Kopi Indonesia', answer: 'bukan', reason: 'Benar! Kopi adalah barang EKSPOR Indonesia, bukan impor. Indonesia justru mengekspor kopi.' }
+      ];
+      
+      const data = miniGameImpor[idx];
+      const isCorrect = answer === data.answer;
+      const feedback = document.getElementById(`impor-game-feedback-${idx}`);
+      
+      // Disable semua tombol
+      document.querySelectorAll(`button[data-impor-game="${idx}"]`).forEach(btn => {
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+        if (btn.dataset.answer === data.answer) {
+          btn.style.backgroundColor = '#16a34a';
+          btn.style.borderColor = '#15803d';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        } else if (btn.dataset.answer === answer && answer !== data.answer) {
+          btn.style.backgroundColor = '#dc2626';
+          btn.style.borderColor = '#b91c1c';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        }
+      });
+      
+      if (feedback) {
+        const bgColor = isCorrect ? 'rgba(22,163,74,0.15)' : 'rgba(220,38,38,0.15)';
+        const borderColor = isCorrect ? '#16a34a' : '#dc2626';
+        const textColor = isCorrect ? '#16a34a' : '#dc2626';
+        const emoji = isCorrect ? '✅' : '❌';
+        
+        feedback.innerHTML = `
+          <div class="rounded-lg p-3 font-semibold text-sm flex items-start gap-2" style="background-color: ${bgColor}; border-left: 4px solid ${borderColor}; color: ${textColor};">
+            <span class="text-lg">${emoji}</span>
+            <span>${data.reason}</span>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+      }
+    }
+
+    function showImportFlowSteps() {
+      const steps = [
+        { emoji: '🏭', title: 'Tahap 1: Produsen Luar Negeri', desc: 'Barang diproduksi di pabrik atau perkebunan di negara asal, seperti gandum di Australia atau mobil di Jepang.' },
+        { emoji: '✅', title: 'Tahap 2: Pemeriksaan Kualitas', desc: 'Barang diperiksa untuk memastikan kualitas dan standar internasional terpenuhi.' },
+        { emoji: '📦', title: 'Tahap 3: Pengemasan', desc: 'Barang dikemas dengan aman dalam kontainer khusus untuk pengiriman jauh.' },
+        { emoji: '⛴️', title: 'Tahap 4: Pengiriman', desc: 'Kapal atau pesawat kargo membawa barang dari negara asal ke Indonesia selama beberapa minggu.' },
+        { emoji: '🇮🇩', title: 'Tahap 5: Tiba di Pelabuhan Indonesia', desc: 'Barang tiba di pelabuhan Indonesia seperti Tanjung Priok (Jakarta) atau Surabaya.' },
+        { emoji: '🛃', title: 'Tahap 6: Pemeriksaan Bea Cukai', desc: 'Petugas bea cukai memeriksa barang dan dokumen impor untuk memastikan sah dan aman konsumsi.' },
+        { emoji: '💰', title: 'Tahap 7: Pembayaran Bea Masuk', desc: 'Importir membayar bea cukai dan pajak untuk barang yang masuk ke Indonesia.' },
+        { emoji: '🏪', title: 'Tahap 8: Distribusi', desc: 'Barang dibawa ke gudang distributor dan didistribusikan ke toko-toko.' },
+        { emoji: '👨‍👩‍👧‍👦', title: 'Tahap 9: Sampai ke Konsumen', desc: 'Akhirnya barang dijual di toko atau pasar dan dibeli oleh konsumen Indonesia!' }
+      ];
+      
+      let html = '<div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl p-6">';
+      html += '<div class="flex justify-between items-start mb-4"><h2 class="text-2xl font-bold" style="color: var(--primary);">📖 Alur Lengkap Impor</h2><button onclick="closeImportFlow()" class="text-2xl hover:opacity-70">✕</button></div>';
+      
+      html += '<div class="space-y-3">';
+      steps.forEach(step => {
+        html += `
+          <div class="rounded-lg p-4 border-l-4" style="background-color: var(--primary-light); border-color: var(--primary);">
+            <div class="flex items-start gap-3">
+              <span class="text-3xl">${step.emoji}</span>
+              <div>
+                <h4 class="font-bold" style="color: var(--primary);">${step.title}</h4>
+                <p class="text-sm mt-1" style="color: var(--text);">${step.desc}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      html += '</div></div>';
+      
+      let modal = document.getElementById('import-flow-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'import-flow-modal';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = html;
+    }
+
+    function closeImportFlow() {
+      const modal = document.getElementById('import-flow-modal');
+      if (modal) modal.remove();
+    }
+
+    // Data untuk fitur Perbedaan
+    const differenceExplanations = {
+      'arah-barang': {
+        title: '📍 Arah Barang',
+        content: 'Ekspor berarti barang KELUAR dari Indonesia ke negara lain. Impor berarti barang MASUK dari negara lain ke Indonesia. Arahnya berlawanan!'
+      },
+      'pelaku': {
+        title: '👔 Pelaku',
+        content: 'Orang/perusahaan yang menjalankan ekspor disebut EKSPORTIR. Orang/perusahaan yang menjalankan impor disebut IMPORTIR. Mereka adalah pedagang internasional.'
+      },
+      'tujuan': {
+        title: '🎯 Tujuan',
+        content: 'Tujuan ekspor adalah MENAMBAH DEVISA negara (uang masuk). Tujuan impor adalah MEMENUHI KEBUTUHAN yang tidak tersedia di dalam negeri.'
+      },
+      'devisa': {
+        title: '💰 Dampak pada Devisa',
+        content: 'Ekspor MENAMBAH devisa negara karena uang dari pembeli asing masuk ke Indonesia. Impor MENGURANGI devisa karena uang keluar untuk membayar barang impor.'
+      },
+      'contoh': {
+        title: '🍜 Contoh Kegiatan',
+        content: 'Ekspor: Kopi Indonesia dijual ke Starbucks di Amerika. Impor: Gandum dari Australia dibeli untuk buat roti di Indonesia. Keduanya terjadi setiap hari!'
+      }
+    };
+
+    const caseStudies = [
+      { statement: 'Indonesia menjual kopi ke Amerika Serikat', answer: 'ekspor', explain: '✅ Benar! Ini EKSPOR karena kopi pergi dari Indonesia ke luar negeri (Amerika). Devisa Indonesia bertambah!' },
+      { statement: 'Indonesia membeli gandum dari Australia', answer: 'impor', explain: '✅ Benar! Ini IMPOR karena gandum masuk dari luar negeri (Australia) ke Indonesia. Devisa Indonesia berkurang.' },
+      { statement: 'Batik Indonesia dijual di Jepang', answer: 'ekspor', explain: '✅ Benar! Ini EKSPOR karena batik keluar dari Indonesia ke Jepang. Ini bagus untuk ekonomi Indonesia!' },
+      { statement: 'Mobil dari Jepang masuk ke Indonesia', answer: 'impor', explain: '✅ Benar! Ini IMPOR karena mobil masuk dari Jepang ke Indonesia. Indonesia membutuhkan teknologi mobil dari luar.' },
+      { statement: 'Ikan tuna Indonesia dikirim ke Korea Selatan', answer: 'ekspor', explain: '✅ Benar! Ini EKSPOR karena ikan Indonesia pergi ke Korea. Nelayan Indonesia dapat uang dari penjualan ini!' },
+      { statement: 'Obat-obatan dari Jerman masuk ke Indonesia', answer: 'impor', explain: '✅ Benar! Ini IMPOR karena obat masuk dari Jerman ke Indonesia. Masyarakat Indonesia butuh obat untuk kesehatan.' }
+    ];
+
+
+
+    function simulateMovement(direction) {
+      const container = document.getElementById('simulation-container');
+      if (!container) return;
+      
+      // Hapus animasi sebelumnya
+      const existingBox = container.querySelector('.animated-box');
+      if (existingBox) existingBox.remove();
+      
+      // Buat kotak bergerak
+      const box = document.createElement('div');
+      box.className = 'animated-box';
+      box.innerHTML = '📦';
+      box.style.cssText = `
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: white;
+        border: 3px solid var(--primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+        z-index: 10;
+        ${direction === 'export' ? 'left: 0; animation: moveRight 2s ease-in-out forwards;' : 'right: 0; animation: moveLeft 2s ease-in-out forwards;'}
+      `;
+      container.appendChild(box);
+      
+      // Tambah style jika belum ada
+      if (!document.getElementById('simulation-styles')) {
+        const style = document.createElement('style');
+        style.id = 'simulation-styles';
+        style.innerHTML = `
+          @keyframes moveRight {
+            0% { left: 0; transform: scale(1); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { left: calc(100% - 60px); transform: scale(1); }
+          }
+          @keyframes moveLeft {
+            0% { right: 0; transform: scale(1); }
+            50% { transform: scale(1.1) rotate(-5deg); }
+            100% { right: calc(100% - 60px); transform: scale(1); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    function answerCase(caseIndex) {
+      const btns = document.querySelectorAll(`[data-case="${caseIndex}"]`);
+      btns.forEach(b => b.disabled = true);
+      
+      const caseData = caseStudies[caseIndex];
+      const answer = event.target.dataset.answer;
+      const feedback = document.getElementById(`case-feedback-${caseIndex}`);
+      const isCorrect = answer === caseData.answer;
+      
+      if (feedback) {
+        feedback.innerHTML = `
+          <div class="rounded-lg p-4 font-semibold text-sm flex items-start gap-2 animate-fadeIn" style="background-color: ${isCorrect ? 'rgba(22,163,74,0.15)' : 'rgba(220,38,38,0.15)'}; border-left: 4px solid ${isCorrect ? '#16a34a' : '#dc2626'}; color: ${isCorrect ? '#16a34a' : '#dc2626'};">
+            <span class="text-lg mt-0.5">${isCorrect ? '🎉' : '💡'}</span>
+            <div>
+              <div>${isCorrect ? 'Sempurna!' : 'Coba lagi!'}</div>
+              <div class="text-xs mt-1 opacity-80">${caseData.explain}</div>
+            </div>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+      }
+      
+      // Highlight tombol yang benar
+      btns.forEach(b => {
+        if (b.dataset.answer === caseData.answer) {
+          b.style.backgroundColor = '#16a34a';
+          b.style.borderColor = '#15803d';
+          b.style.color = 'white';
+        } else if (b.dataset.answer !== caseData.answer && answer === b.dataset.answer) {
+          b.style.backgroundColor = '#dc2626';
+          b.style.borderColor = '#b91c1c';
+          b.style.color = 'white';
+        }
+      });
+    }
+
+    function pagePerbedaan() {
+      const rows = [
+        ['Pengertian', 'Menjual barang ke luar negeri', 'Membeli barang dari luar negeri'],
+        ['Pelaku', 'Eksportir', 'Importir'],
+        ['Arah Barang', 'Dalam negeri → Luar negeri', 'Luar negeri → Dalam negeri'],
+        ['Tujuan', 'Menambah devisa', 'Memenuhi kebutuhan'],
+        ['Dampak pada Devisa', 'Devisa bertambah', 'Devisa berkurang'],
+        ['Contoh', 'Kopi, sawit, karet', 'Gandum, mesin, elektronik'],
+        ['Manfaat Utama', 'Memperluas pasar produk lokal', 'Memenuhi kebutuhan yang kurang']
+      ];
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 3', 'Perbedaan Ekspor & Impor', 'Kenali perbedaannya dengan tabel sederhana 📊')}
+        ${audioButton('perbedaan')}
+        <div class="rounded-2xl shadow-lg overflow-hidden" style="background-color: var(--secondary);">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr style="background-color: var(--primary); color: var(--secondary);">
+                  <th class="p-4">Aspek</th>
+                  <th class="p-4">📤 Ekspor</th>
+                  <th class="p-4">📥 Impor</th>
+                </tr>
+              </thead>
+              <tbody style="color: var(--text);">
+                ${rows.map((r, i) => `<tr style="background-color: ${i % 2 ? 'transparent' : 'rgba(0,0,0,0.05)'}; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                  <td class="p-4 font-bold" style="color: var(--primary);">${r[0]}</td>
+                  <td class="p-4">${r[1]}</td>
+                  <td class="p-4">${r[2]}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-4 mt-6">
+          <div class="rounded-2xl p-5 border-2" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+            <div class="text-5xl mb-2">🚢📤</div>
+            <h3 class="font-bold text-lg" style="color: var(--primary);">Ingat!</h3>
+            <p class="text-sm">Ekspor = <b>KELUAR</b>. Barang pergi dari Indonesia menuju negara lain.</p>
+          </div>
+          <div class="rounded-2xl p-5 border-2" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+            <div class="text-5xl mb-2">✈️📥</div>
+            <h3 class="font-bold text-lg" style="color: var(--primary);">Ingat!</h3>
+            <p class="text-sm">Impor = <b>MASUK</b>. Barang datang dari luar negeri ke Indonesia.</p>
+          </div>
+        </div>
+        
+        <!-- FITUR 1: KARTU PENJELASAN DETAIL (SELALU TERBUKA) -->
+        <div class="rounded-2xl p-6 shadow-md mt-8 border-t-4" style="background-color: var(--secondary); border-color: var(--primary);">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🔍 Penjelasan Detail</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            ${Object.keys(differenceExplanations).map(key => {
+              const exp = differenceExplanations[key];
+              return `
+                <div class="rounded-xl border-2 overflow-hidden shadow-sm" style="border-color: var(--primary); background-color: white;">
+                  <div class="p-4 font-bold" style="background-color: var(--primary-light); color: var(--primary);">
+                    ${exp.title}
+                  </div>
+                  <div class="p-4 text-sm" style="color: var(--text); background-color: white; line-height: 1.6;">
+                    ${exp.content}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        
+        <!-- FITUR 2: SIMULASI ARAH BARANG -->
+        <div class="rounded-2xl p-6 shadow-md mt-8 border-t-4" style="background-color: var(--secondary); border-color: var(--accent);">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🎬 Simulasi Arah Barang</h3>
+          <div id="simulation-container" class="relative rounded-xl p-6 mb-4 h-24" style="background: linear-gradient(to right, rgba(59,130,246,0.1) 0%, white 50%, rgba(59,130,246,0.1) 100%); border: 2px dashed var(--primary);">
+            <div class="absolute left-2 top-1/2 transform -translate-y-1/2 font-bold" style="color: var(--primary);">🇮🇩<br><span style="font-size: 0.8em;">Indonesia</span></div>
+            <div class="absolute right-2 top-1/2 transform -translate-y-1/2 font-bold" style="color: var(--primary);">🌍<br><span style="font-size: 0.8em;">Luar Negeri</span></div>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="simulateMovement('export')" class="flex-1 px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">▶️ Simulasikan Ekspor</button>
+            <button onclick="simulateMovement('import')" class="flex-1 px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">◀️ Simulasikan Impor</button>
+          </div>
+        </div>
+        
+        <!-- FITUR 3: GAME TEBAK EKSPOR ATAU IMPOR -->
+        <div class="rounded-2xl p-6 shadow-md mt-8 border-t-4" style="background-color: var(--secondary); border-color: #8b5cf6;">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">🎮 Game: Tebak Ekspor atau Impor?</h3>
+          <p class="text-sm mb-4" style="color: var(--text);">Baca kasus berikut, kemudian pilih apakah itu EKSPOR atau IMPOR. Lihat jawaban benarnya! 🎯</p>
+          <div class="space-y-4">
+            ${caseStudies.map((caseData, idx) => `
+              <div class="rounded-xl p-4 border-2" style="background-color: white; border-color: var(--primary-light);">
+                <div class="font-bold mb-3" style="color: var(--text);">Kasus ${idx + 1}: <span style="color: var(--primary);">"${caseData.statement}"</span></div>
+                <div class="flex gap-2 mb-3">
+                  <button data-case="${idx}" data-answer="ekspor" onclick="answerCase(${idx})" class="flex-1 px-4 py-2 rounded-lg font-bold hover:opacity-90 transition" style="background-color: var(--primary); color: white; border: 2px solid var(--primary);">📤 Ekspor</button>
+                  <button data-case="${idx}" data-answer="impor" onclick="answerCase(${idx})" class="flex-1 px-4 py-2 rounded-lg font-bold hover:opacity-90 transition" style="background-color: white; color: var(--primary); border: 2px solid var(--primary);">📥 Impor</button>
+                </div>
+                <div id="case-feedback-${idx}" class="hidden"></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        ${navButtons('impor', 'manfaat')}
+      </section>`;
+    }
+
+    function pageManfaat() {
+      // Data untuk Tab Interaktif
+      const tabsData = {
+        masyarakat: {
+          emoji: '👨‍👩‍👧‍👦',
+          title: 'Bagi Masyarakat',
+          explanation: 'Ekspor dan impor bermanfaat bagi masyarakat karena pilihan barang menjadi lebih banyak, kebutuhan sehari-hari terpenuhi, dan lapangan kerja dapat terbuka. Masyarakat bisa membeli barang berkualitas dengan harga lebih terjangkau. 🛍️',
+          examples: ['📱 Bisa membeli HP dari Tiongkok dengan harga murah', '🍔 Bisa makan di restoran pakai daging impor dari Australia', '👕 Bisa memilih pakaian dari berbagai negara', '💊 Bisa membeli obat berkualitas dari negara lain'],
+          question: 'Contoh manfaat impor bagi masyarakat adalah…',
+          options: ['A. Masyarakat dapat membeli barang yang belum diproduksi di Indonesia', 'B. Barang menjadi hilang dari pasar', 'C. Negara berhenti berdagang'],
+          correctAnswer: 0,
+          explanation_answer: 'Benar! Impor membuat masyarakat bisa mendapatkan barang yang belum tersedia di Indonesia.'
+        },
+        perusahaan: {
+          emoji: '🏢',
+          title: 'Bagi Perusahaan',
+          explanation: 'Ekspor dan impor membuka peluang bisnis yang lebih besar bagi perusahaan. Perusahaan bisa menjual produk ke pasar internasional, mendapat keuntungan lebih, dan mengakses bahan baku berkualitas dari luar negeri. 💼',
+          examples: ['📈 Perusahaan kopi Indonesia bisa menjual ke Amerika dan mendapat lebih banyak uang', '🏭 Pabrik tekstil bisa mendapat bahan baku terbaik dari impor', '🚀 Bisnis dapat berkembang dengan teknologi baru dari luar negeri', '🌍 Perusahaan dikenal di pasar global'],
+          question: 'Manfaat ekspor bagi perusahaan kopi Indonesia adalah…',
+          options: ['A. Perusahaan tidak perlu memproduksi lagi', 'B. Pasar produk menjadi lebih luas dan keuntungan meningkat', 'C. Semua produk harus diekspor tanpa terjual di dalam'],
+          correctAnswer: 1,
+          explanation_answer: 'Tepat sekali! Ekspor membuka pasar baru bagi perusahaan sehingga penjualan dan keuntungan meningkat.'
+        },
+        negara: {
+          emoji: '🏛️',
+          title: 'Bagi Negara',
+          explanation: 'Ekspor dan impor membawa manfaat besar bagi negara. Ekspor menambah devisa (uang masuk), membawa pertumbuhan ekonomi, dan membuka hubungan baik dengan negara lain. Impor membantu memenuhi kebutuhan nasional. 🇮🇩',
+          examples: ['💵 Negara mendapat devisa dari ekspor kopi, sawit, dan karet', '📊 Ekonomi nasional tumbuh dan PDB meningkat', '🤝 Indonesia memiliki hubungan perdagangan baik dengan negara lain', '👷 Jutaan lapangan kerja terbuka di berbagai industri'],
+          question: 'Dampak positif ekspor bagi negara Indonesia adalah…',
+          options: ['A. Negara menjadi kaya tapi rakyat tetap miskin', 'B. Menambah devisa negara dan mendorong pertumbuhan ekonomi', 'C. Negara harus berhenti memproduksi barang sendiri'],
+          correctAnswer: 1,
+          explanation_answer: 'Sangat benar! Ekspor menambah devisa negara yang bisa digunakan untuk pembangunan dan kesejahteraan rakyat.'
+        }
+      };
+
+      // Data untuk Studi Kasus Mini
+      const caseStudyBenefits = {
+        petani: {
+          emoji: '🚜',
+          title: 'Bagi Petani',
+          benefit: 'Petani mendapat pasar yang lebih luas. Hasil panennya tidak hanya dijual di Indonesia, tapi juga ke luar negeri. Penghasilan petani meningkat drastis! 💰'
+        },
+        perusahaan: {
+          emoji: '🏢',
+          title: 'Bagi Perusahaan',
+          benefit: 'Perusahaan ekspor mendapat pembeli dari luar negeri. Jumlah pembelian meningkat, bisnis berkembang pesat, dan keuntungan terus bertambah! 📈'
+        },
+        negara: {
+          emoji: '🇮🇩',
+          title: 'Bagi Negara',
+          benefit: 'Negara mendapat devisa dari hasil ekspor kopi. Uang ini bisa digunakan untuk pembangunan infrastruktur, pendidikan, dan kesehatan masyarakat! ✨'
+        }
+      };
+
+      // Data untuk Game Klasifikasi
+      const classificationGame = [
+        { statement: 'Menambah devisa negara', category: 'negara', icon: '💰' },
+        { statement: 'Pilihan barang lebih banyak di toko', category: 'masyarakat', icon: '🛍️' },
+        { statement: 'Pasar produk menjadi lebih luas', category: 'perusahaan', icon: '📈' },
+        { statement: 'Lapangan kerja bertambah', category: 'masyarakat', icon: '👷' },
+        { statement: 'Keuntungan perusahaan meningkat', category: 'perusahaan', icon: '💵' },
+        { statement: 'Pertumbuhan ekonomi nasional meningkat', category: 'negara', icon: '📊' }
+      ];
+
+      const currentTab = window.currentTabManfaat || 'masyarakat';
+      let answeredQuestions = {};
+      let classificationAnswers = {};
+
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 4', 'Manfaat Ekspor & Impor', 'Untuk masyarakat, perusahaan, dan negara ✨')}
+        ${audioButton('manfaat')}
+        
+        <!-- FITUR 1: TAB INTERAKTIF -->
+        <div class="rounded-2xl shadow-lg overflow-hidden mt-6" style="background-color: var(--secondary);">
+          <div class="flex border-b-4" style="border-color: var(--primary);">
+            ${Object.keys(tabsData).map(key => {
+              const data = tabsData[key];
+              const isActive = currentTab === key;
+              return `
+                <button onclick="window.currentTabManfaat='${key}'; window.renderPageManfaat();" 
+                  class="flex-1 px-4 py-4 font-bold text-center transition flex items-center justify-center gap-2"
+                  style="background-color: ${isActive ? 'var(--primary)' : 'transparent'}; color: ${isActive ? 'white' : 'var(--text)'}; border-bottom: ${isActive ? '4px solid var(--accent)' : 'none'};">
+                  <span class="text-2xl">${data.emoji}</span>
+                  <span class="hidden sm:inline">${data.title}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="p-6 md:p-8">
+            ${(() => {
+              const active = tabsData[currentTab];
+              return `
+                <div class="mb-6">
+                  <h3 class="text-2xl font-bold mb-3 flex items-center gap-2" style="color: var(--primary);">
+                    ${active.emoji} ${active.title}
+                  </h3>
+                  <div class="rounded-xl p-4" style="background-color: var(--primary-light);">
+                    <p class="text-sm leading-relaxed" style="color: var(--text);">${active.explanation}</p>
+                  </div>
+                </div>
+                
+                <div class="mb-6">
+                  <h4 class="font-bold mb-3" style="color: var(--primary);">📌 Contoh Nyata:</h4>
+                  <div class="grid gap-2">
+                    ${active.examples.map(ex => `
+                      <div class="rounded-lg p-3 flex items-start gap-2" style="background-color: var(--primary-light);">
+                        <span class="text-lg">${ex.split(' ')[0]}</span>
+                        <span style="color: var(--text);">${ex}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+                
+                <div class="rounded-xl border-2 p-4" style="background-color: white; border-color: var(--primary);">
+                  <h4 class="font-bold mb-3" style="color: var(--primary);">❓ Cek Pemahamanmu</h4>
+                  <p class="text-sm mb-3" style="color: var(--text);">${active.question}</p>
+                  <div class="space-y-2">
+                    ${active.options.map((opt, idx) => `
+                      <button data-manfaat-tab="${currentTab}" data-manfaat-answer="${idx}" 
+                        onclick="answerManfaatQuestion('${currentTab}', ${idx})"
+                        class="w-full text-left px-4 py-3 rounded-lg border-2 font-semibold text-sm hover:opacity-80 transition"
+                        style="background-color: white; border-color: var(--primary); color: var(--text);">
+                        ${opt}
+                      </button>
+                    `).join('')}
+                  </div>
+                  <div id="manfaat-feedback-${currentTab}" class="mt-3 hidden"></div>
+                </div>
+              `;
+            })()}
+          </div>
+        </div>
+        
+        <!-- FITUR 2: STUDI KASUS MINI -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: var(--accent);">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--primary);">
+            ☕ Studi Kasus: Ekspor Kopi Indonesia
+          </h3>
+          <div class="rounded-xl p-4 mb-6" style="background-color: var(--primary-light);">
+            <p class="font-semibold" style="color: var(--text);">
+              Sebuah perusahaan kopi Indonesia berhasil mengekspor kopi ke Amerika Serikat dalam jumlah besar. Apa manfaatnya bagi petani, perusahaan, dan negara?
+            </p>
+          </div>
+          
+          <div class="grid md:grid-cols-3 gap-4">
+            ${['petani', 'perusahaan', 'negara'].map(actor => `
+              <div class="rounded-xl p-5 border-2 cursor-pointer hover:shadow-lg hover:scale-105 transition" 
+                onclick="toggleCaseStudy('${actor}')"
+                style="background-color: ${window.activeCaseStudy === actor ? 'var(--primary)' : 'white'}; border-color: var(--primary); color: ${window.activeCaseStudy === actor ? 'white' : 'var(--text)'};">
+                <div class="text-4xl mb-2">${caseStudyBenefits[actor].emoji}</div>
+                <h4 class="font-bold mb-1">${caseStudyBenefits[actor].title}</h4>
+                <div class="text-sm opacity-75">Klik untuk lihat</div>
+              </div>
+            `).join('')}
+          </div>
+          
+          ${(() => {
+            if (!window.activeCaseStudy) return '<div style="text-align: center; margin-top: 1.5rem; color: #64748b; font-style: italic;">👆 Klik salah satu untuk melihat manfaatnya</div>';
+            const actor = caseStudyBenefits[window.activeCaseStudy];
+            return `
+              <div class="mt-6 rounded-xl p-4 border-2 animate-slideUp" style="background-color: var(--primary-light); border-color: var(--primary);">
+                <div class="flex items-start gap-3">
+                  <span class="text-4xl">${actor.emoji}</span>
+                  <div>
+                    <h5 class="font-bold mb-1" style="color: var(--primary);">${actor.title}</h5>
+                    <p class="text-sm leading-relaxed" style="color: var(--text);">${actor.benefit}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          })()}
+        </div>
+        
+        <!-- FITUR 3: GAME KLASIFIKASI MANFAAT -->
+        <div class="rounded-2xl shadow-lg p-6 md:p-8 mt-8 border-t-4" style="background-color: var(--secondary); border-color: #8b5cf6;">
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2" style="color: var(--primary);">
+            🎮 Game: Klasifikasi Manfaat
+          </h3>
+          <p class="text-sm mb-6" style="color: var(--text);">Manfaat di bawah ini termasuk bagi Masyarakat, Perusahaan, atau Negara? Klik untuk menjawab! ✨</p>
+          
+          <div class="space-y-3">
+            ${classificationGame.map((item, idx) => `
+              <div class="rounded-xl p-4 border-2 bg-white" style="border-color: var(--primary-light);">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="text-lg font-semibold flex items-center gap-2" style="color: var(--text);">
+                    <span>${item.icon}</span>
+                    ${item.statement}
+                  </div>
+                  <span class="text-xs font-bold px-2 py-1 rounded" style="background-color: var(--primary-light); color: var(--primary);">Soal ${idx + 1}</span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <button data-classification="${idx}" data-category="masyarakat" onclick="answerClassification(${idx}, 'masyarakat')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    👥 Masyarakat
+                  </button>
+                  <button data-classification="${idx}" data-category="perusahaan" onclick="answerClassification(${idx}, 'perusahaan')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    🏢 Perusahaan
+                  </button>
+                  <button data-classification="${idx}" data-category="negara" onclick="answerClassification(${idx}, 'negara')" 
+                    class="flex-1 px-3 py-2 rounded-lg border-2 font-bold text-sm hover:opacity-80 transition"
+                    style="background-color: white; border-color: var(--primary); color: var(--primary);">
+                    🏛️ Negara
+                  </button>
+                </div>
+                
+                <div id="classification-feedback-${idx}" class="mt-3 hidden"></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="rounded-2xl p-6 md:p-8 mt-8 shadow-xl text-white wave-bg">
+          <h3 class="text-2xl font-bold mb-3">💡 Kesimpulan</h3>
+          <p class="text-white/90 leading-relaxed">Ekspor dan impor adalah kegiatan penting dalam <b class="text-yellow-300">perdagangan internasional</b>. Manfaatnya dirasakan oleh semua pihak: masyarakat mendapat pilihan barang, perusahaan berkembang, dan negara mendapat devisa. Keduanya saling melengkapi untuk membuat negara semakin maju! 🌍✨</p>
+        </div>
+        ${navButtons('perbedaan', 'contoh')}
+      </section>`;
+    }
+
+    function answerManfaatQuestion(tab, answerIdx) {
+      const tabsData = {
+        masyarakat: {
+          correctAnswer: 0,
+          explanation_answer: 'Benar! Impor membuat masyarakat bisa mendapatkan barang yang belum tersedia di Indonesia.'
+        },
+        perusahaan: {
+          correctAnswer: 1,
+          explanation_answer: 'Tepat sekali! Ekspor membuka pasar baru bagi perusahaan sehingga penjualan dan keuntungan meningkat.'
+        },
+        negara: {
+          correctAnswer: 1,
+          explanation_answer: 'Sangat benar! Ekspor menambah devisa negara yang bisa digunakan untuk pembangunan dan kesejahteraan rakyat.'
+        }
+      };
+      
+      const data = tabsData[tab];
+      const isCorrect = answerIdx === data.correctAnswer;
+      const feedback = document.getElementById(`manfaat-feedback-${tab}`);
+      
+      if (feedback) {
+        const bgColor = isCorrect ? 'rgba(22,163,74,0.15)' : 'rgba(220,38,38,0.15)';
+        const borderColor = isCorrect ? '#16a34a' : '#dc2626';
+        const textColor = isCorrect ? '#16a34a' : '#dc2626';
+        const emoji = isCorrect ? '🎉' : '💡';
+        
+        feedback.innerHTML = `
+          <div class="rounded-lg p-4 font-semibold text-sm flex items-start gap-2 animate-fadeIn" style="background-color: ${bgColor}; border-left: 4px solid ${borderColor}; color: ${textColor};">
+            <span class="text-lg mt-0.5">${emoji}</span>
+            <div>
+              <div>${isCorrect ? 'Sempurna!' : 'Coba lagi!'}</div>
+              <div class="text-xs mt-1 opacity-80">${data.explanation_answer}</div>
+            </div>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+      }
+      
+      // Disable all buttons
+      document.querySelectorAll(`[data-manfaat-tab="${tab}"]`).forEach(btn => {
+        btn.disabled = true;
+        if (parseInt(btn.dataset.manfaatAnswer) === data.correctAnswer) {
+          btn.style.backgroundColor = '#16a34a';
+          btn.style.borderColor = '#15803d';
+          btn.style.color = 'white';
+        } else if (parseInt(btn.dataset.manfaatAnswer) === answerIdx) {
+          btn.style.backgroundColor = '#dc2626';
+          btn.style.borderColor = '#b91c1c';
+          btn.style.color = 'white';
+        }
+      });
+    }
+
+    function toggleCaseStudy(actor) {
+      window.activeCaseStudy = window.activeCaseStudy === actor ? null : actor;
+      window.renderPageManfaat();
+    }
+
+    function answerClassification(idx, category) {
+      const correctAnswers = ['negara', 'masyarakat', 'perusahaan', 'masyarakat', 'perusahaan', 'negara'];
+      const isCorrect = category === correctAnswers[idx];
+      const feedback = document.getElementById(`classification-feedback-${idx}`);
+      
+      classificationAnswers[idx] = category;
+      
+      // Disable semua tombol untuk soal ini dan highlight hasil
+      const buttons = document.querySelectorAll(`button[data-classification="${idx}"]`);
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '1';
+        const btnCategory = btn.dataset.category;
+        
+        if (btnCategory === correctAnswers[idx]) {
+          btn.style.backgroundColor = '#16a34a';
+          btn.style.borderColor = '#15803d';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        } else if (btnCategory === category && category !== correctAnswers[idx]) {
+          btn.style.backgroundColor = '#dc2626';
+          btn.style.borderColor = '#b91c1c';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'bold';
+        }
+      });
+      
+      if (feedback) {
+        const bgColor = isCorrect ? 'rgba(22,163,74,0.15)' : 'rgba(220,38,38,0.15)';
+        const borderColor = isCorrect ? '#16a34a' : '#dc2626';
+        const textColor = isCorrect ? '#16a34a' : '#dc2626';
+        const emoji = isCorrect ? '✅' : '❌';
+        const categoryNames = { masyarakat: '👥 Masyarakat', perusahaan: '🏢 Perusahaan', negara: '🏛️ Negara' };
+        const correctLabel = categoryNames[correctAnswers[idx]];
+        
+        feedback.innerHTML = `
+          <div class="rounded-lg p-3 font-semibold text-sm flex items-start gap-2" style="background-color: ${bgColor}; border-left: 4px solid ${borderColor}; color: ${textColor};">
+            <span class="text-lg">${emoji}</span>
+            <span>${isCorrect ? 'Benar sekali!' : `Kurang tepat. Jawabannya adalah ${correctLabel}`}</span>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+      }
+    }
+
+    function renderPageManfaat() {
+      window.currentTabManfaat = window.currentTabManfaat || 'masyarakat';
+      const main = document.getElementById('main-content');
+      if (main) {
+        main.innerHTML = pageManfaat();
+        lucide.createIcons();
+      }
+    }
+
+    const contohData = {
+      ekspor: {
+        kopi: {
+          title: '☕ Perjalanan Kopi ke Amerika',
+          steps: [
+            { emoji: '🚜', title: 'Petani Menanam & Panen', desc: 'Petani di Sumatera Utara menanam biji kopi dengan penuh perhatian, menunggu waktu panen yang tepat.' },
+            { emoji: '🔄', title: 'Pemilihan & Pengolahan', desc: 'Kopi dipilih yang terbaik, lalu dijemur dan diproses untuk menjadi biji kopi berkualitas tinggi.' },
+            { emoji: '📦', title: 'Pengemasan', desc: 'Eksportir mengemas kopi dengan rapi dalam karung dan kotak berstandar internasional.' },
+            { emoji: '📋', title: 'Pemeriksaan Dokumen', desc: 'Petugas bea cukai memeriksa surat-surat ekspor dan memastikan semua legal dan sesuai aturan.' },
+            { emoji: '✈️', title: 'Pengiriman', desc: 'Kopi dimuat ke dalam kapal atau pesawat kargo untuk dikirim ke Amerika Serikat.' },
+            { emoji: '🇺🇸', title: 'Tiba di Amerika', desc: 'Kopi tiba di pelabuhan Amerika, lalu didistribusikan ke kafe-kafe dan toko kopi premium di seluruh negara.' },
+            { emoji: '☕', title: 'Dijual & Dikonsumsi', desc: 'Konsumen Amerika menikmati kopi premium Indonesia dengan harga yang cukup tinggi karena kualitasnya!' }
+          ],
+          flow: 'Petani → Pengolahan → Eksportir → Bea Cukai → Kapal/Pesawat → Pelabuhan USA → Distributor → Toko → Konsumen 🇺🇸',
+          process: ['Petani memanen kopi berkualitas', 'Kopi dijemur dan diproses', 'Eksportir mengemas kopi dengan standar internasional', 'Dokumen ekspor diperiksa dan disetujui', 'Kopi dimuat ke kapal atau pesawat', 'Perjalanan laut/udara ke Amerika', 'Kopi tiba dan dijual di kafe-kafe premium']
+        },
+        sawit: {
+          title: '🌴 Perjalanan Minyak Sawit ke India',
+          steps: [
+            { emoji: '🌴', title: 'Panen Buah Sawit', desc: 'Petani perkebunan sawit di Kalimantan memanen buah kelapa sawit yang sudah matang merah.' },
+            { emoji: '🏭', title: 'Pengolahan di Pabrik', desc: 'Buah sawit dibawa ke pabrik pengolahan untuk diproses menjadi minyak sawit mentah.' },
+            { emoji: '🛢️', title: 'Produksi Minyak', desc: 'Melalui proses press dan pemurnian, buah sawit menjadi minyak sawit siap ekspor.' },
+            { emoji: '📦', title: 'Pengemasan dalam Drum', desc: 'Minyak sawit dikemas dalam drum besar atau tangki khusus untuk pengiriman dalam jumlah besar.' },
+            { emoji: '🚢', title: 'Pengiriman ke India', desc: 'Kapal-kapal besar mengangkut ribuan ton minyak sawit ke pelabuhan India.' },
+            { emoji: '🇮🇳', title: 'Tiba di Pelabuhan India', desc: 'Minyak sawit tiba di India dan diterima oleh importir lokal untuk kebutuhan industri.' },
+            { emoji: '🥘', title: 'Digunakan Konsumen', desc: 'Minyak sawit digunakan untuk membuat minyak goreng, margarin, dan berbagai produk makanan di India.' }
+          ],
+          flow: 'Petani Sawit → Pabrik Pengolahan → Produsen Minyak → Eksportir → Kapal Kargo → Pelabuhan India → Importir → Industri Makanan 🇮🇳',
+          process: ['Petani memanen buah kelapa sawit di perkebunan', 'Buah dibawa ke pabrik pengolahan', 'Minyak sawit dipress dan dimurnikan', 'Dikemas dalam drum untuk ekspor', 'Kapal membawa minyak ke India', 'Tiba di pelabuhan India dan diterima importir', 'Digunakan untuk produk makanan di India']
+        },
+        batik: {
+          title: '🎨 Perjalanan Batik ke Jepang',
+          steps: [
+            { emoji: '🎨', title: 'Desain Batik', desc: 'Pengrajin Indonesia membuat desain batik tradisional yang indah dan unik dengan motif khas Nusantara.' },
+            { emoji: '🖌️', title: 'Proses Membatik', desc: 'Kain diwarnai dengan teknik tradisional, menggunakan lilin dan pewarna alami untuk menghasilkan warna cerah.' },
+            { emoji: '✨', title: 'Penyelesaian', desc: 'Batik dibersihkan, disetrika, dan diperiksa untuk memastikan kualitas sempurna tanpa cacat.' },
+            { emoji: '📦', title: 'Pengemasan Cantik', desc: 'Batik dikemas dengan rapi dan cantik dalam kemasan menarik yang mencerminkan kualitas premium.' },
+            { emoji: '✈️', title: 'Pengiriman ke Jepang', desc: 'Batik dikirim via pesawat kargo ke Jepang dalam waktu singkat untuk menjaga kesegaran.' },
+            { emoji: '🇯🇵', title: 'Tiba di Jepang', desc: 'Batik tiba di bandara Jepang dan diterima oleh importir atau gallery seni di Jepang.' },
+            { emoji: '👗', title: 'Dipajang & Dijual', desc: 'Batik dipajang sebagai koleksi fashion dan seni premium di galeri dan butik eksklusif di Jepang!' }
+          ],
+          flow: 'Pengrajin → Pembatikan → Penyelesaian & QC → Pengemasan → Pesawat Kargo → Bandara Jepang → Gallery → Konsumen 🇯🇵',
+          process: ['Pengrajin membuat desain batik tradisional', 'Kain diproses dengan teknik membatik', 'Batik disetrika dan diperiksa kualitasnya', 'Dikemas dengan pengemasan premium', 'Pesawat kargo membawa batik ke Jepang', 'Tiba di bandara dan masuk ke gallery', 'Dijual sebagai koleksi fashion premium']
+        },
+        ikan: {
+          title: '🐟 Perjalanan Ikan Tuna ke Eropa',
+          steps: [
+            { emoji: '🛥️', title: 'Nelayan Menangkap Ikan', desc: 'Nelayan Indonesia berlayar ke laut dalam untuk menangkap ikan tuna yang besar dan berkualitas tinggi.' },
+            { emoji: '🐟', title: 'Pemilihan & Pembersihan', desc: 'Ikan tuna dipilih yang terbaik, lalu dibersihkan dan diisi dengan es untuk menjaga kesegaran.' },
+            { emoji: '❄️', title: 'Pembekuan', desc: 'Ikan tuna dibekukan dengan teknologi modern dalam suhu di bawah -18°C untuk mempertahankan kualitas.' },
+            { emoji: '📦', title: 'Pengemasan Khusus', desc: 'Ikan tuna beku dikemas dalam kontainer khusus dengan es dan sistem pendingin untuk menjaga mutu.' },
+            { emoji: '🚢', title: 'Kapal Pendingin', desc: 'Kapal khusus berpendingin membawa ikan tuna dengan suhu terkontrol ke Eropa selama berbulan-bulan.' },
+            { emoji: '🇪🇺', title: 'Tiba di Eropa', desc: 'Ikan tuna tiba di pelabuhan Eropa dan melalui bea cukai serta pemeriksaan kesegaran.' },
+            { emoji: '🍣', title: 'Dijual di Restoran', desc: 'Ikan tuna berkualitas tinggi dijual ke restoran Jepang dan sushi bar premium di seluruh Eropa!' }
+          ],
+          flow: 'Nelayan → Kapal Penangkap → Sortir & Bersih → Pembekuan → Pengemasan → Kapal Pendingin → Pelabuhan Eropa → Distributor 🇪🇺',
+          process: ['Nelayan menangkap ikan tuna di laut', 'Ikan dipilih dan dibersihkan', 'Dibekukan dengan teknologi modern', 'Dikemas dalam kontainer berpendingin', 'Kapal khusus membawa ikan ke Eropa', 'Tiba di pelabuhan dan melalui bea cukai', 'Dijual ke restoran dan sushi bar premium']
+        }
+      },
+      impor: {
+        mobil: {
+          title: '🚗 Perjalanan Mobil dari Jepang',
+          steps: [
+            { emoji: '🏭', title: 'Produksi di Pabrik Jepang', desc: 'Mobil Toyota atau Honda diproduksi di pabrik canggih di Jepang dengan teknologi terkini.' },
+            { emoji: '✅', title: 'Pemeriksaan Kualitas', desc: 'Setiap mobil diperiksa dengan teliti untuk memastikan semua sistem bekerja sempurna dan aman.' },
+            { emoji: '🖌️', title: 'Pengecatan & Finishing', desc: 'Mobil dicat dengan warna pilihan, lalu difinis dan dipersiapkan untuk pengiriman.' },
+            { emoji: '📦', title: 'Pengemasan & Persiapan', desc: 'Mobil dibungkus dengan plastik pelindung dan disiapkan di gudang untuk pengiriman.' },
+            { emoji: '🚢', title: 'Kapal Kargo Khusus', desc: 'Kapal-kapal khusus membawa ratusan mobil dalam kontainer khusus ke Indonesia selama 2-4 minggu.' },
+            { emoji: '🇮🇩', title: 'Tiba di Pelabuhan Indonesia', desc: 'Mobil tiba di pelabuhan Indonesia dan melalui pemeriksaan bea cukai serta dokumen impor.' },
+            { emoji: '🚙', title: 'Dijual di Dealer', desc: 'Mobil dibawa ke dealer resmi dan dijual kepada konsumen Indonesia dengan harga kompetitif!' }
+          ],
+          flow: 'Pabrik Jepang → QC & Finishing → Gudang → Kapal Kargo → Pelabuhan Indo → Bea Cukai → Dealer 🇮🇩',
+          process: ['Mobil diproduksi di pabrik Jepang', 'Diperiksa dan difinishing dengan sempurna', 'Dikemas dan siap untuk pengiriman', 'Kapal kargo khusus membawanya ke Indonesia', 'Tiba di pelabuhan Indonesia', 'Melalui pemeriksaan bea cukai', 'Dijual di dealer resmi kepada konsumen']
+        },
+        hp: {
+          title: '📱 Perjalanan HP dari Tiongkok',
+          steps: [
+            { emoji: '🏭', title: 'Produksi di Pabrik', desc: 'Smartphone diproduksi di pabrik besar Tiongkok dengan mesin robotik dan tenaga kerja terampil.' },
+            { emoji: '🔧', title: 'Perakitan & Testing', desc: 'Komponen-komponen dirangkai menjadi satu, lalu ditest untuk memastikan semua fitur bekerja dengan baik.' },
+            { emoji: '💾', title: 'Instalasi Software', desc: 'Sistem operasi dan software pabrik diinstal, lalu ditest lagi untuk stabilitas dan kecepatan.' },
+            { emoji: '📦', title: 'Pengemasan', desc: 'HP dikemas dalam box dengan aksesori lengkap, kemudian disusun dalam karton untuk pengiriman massal.' },
+            { emoji: '🚢', title: 'Kontainer Pengiriman', desc: 'Jutaan HP dikemas dalam kontainer besar dan dikirim via kapal kargo ke seluruh dunia termasuk Indonesia.' },
+            { emoji: '🇮🇩', title: 'Tiba di Indonesia', desc: 'Smartphone tiba di pelabuhan Indonesia, melalui bea cukai, dan diperiksa dokumentasinya.' },
+            { emoji: '📱', title: 'Dijual di Toko', desc: 'HP didistribusikan ke toko-toko retail dan online shop di Indonesia untuk dijual kepada konsumen!' }
+          ],
+          flow: 'Pabrik Tiongkok → Perakitan → Testing → Pengemasan → Kontainer → Kapal → Pelabuhan Indo → Distributor 🇮🇩',
+          process: ['Smartphone diproduksi di pabrik Tiongkok', 'Komponen dirangkai dan ditest', 'Software diinstal dan diverifikasi', 'Dikemas dalam box rapi dan karton', 'Kontainer kapal membawanya ke Indonesia', 'Tiba di pelabuhan dan melalui bea cukai', 'Didistribusikan ke toko retail dan online']
+        },
+        gandum: {
+          title: '🌾 Perjalanan Gandum dari Australia',
+          steps: [
+            { emoji: '🚜', title: 'Petani Memanen Gandum', desc: 'Petani Australia memanen gandum yang sudah matang dari ladang-ladang luas mereka.' },
+            { emoji: '🏭', title: 'Proses di Pabrik', desc: 'Gandum dibawa ke pabrik penggilingan untuk dibersihkan dan diproses menjadi tepung atau butir yang siap ekspor.' },
+            { emoji: '📦', title: 'Pengemasan Besar-besaran', desc: 'Gandum atau tepung dikemas dalam karung dan dimasukkan ke dalam kontainer besar untuk pengiriman.' },
+            { emoji: '📋', title: 'Pemeriksaan Ekspor', desc: 'Dokumen ekspor disiapkan dan diperiksa oleh pihak Australia untuk memastikan semua legal.' },
+            { emoji: '🚢', title: 'Kapal Kargo', desc: 'Kapal-kapal besar membawa ribuan ton gandum dalam kontainer ke Indonesia selama beberapa minggu.' },
+            { emoji: '🇮🇩', title: 'Tiba di Pelabuhan', desc: 'Gandum tiba di pelabuhan Indonesia dan melalui pemeriksaan bea cukai serta dokumen impor.' },
+            { emoji: '🍞', title: 'Dijadi Roti', desc: 'Gandum didistribusikan ke pabrik roti dan industri makanan untuk dibuat roti, mi, dan makanan lainnya!' }
+          ],
+          flow: 'Petani Australia → Pabrik Penggilingan → Pengemasan → Kapal Kargo → Pelabuhan Indo → Distributor → Pabrik Roti 🇮🇩',
+          process: ['Petani Australia memanen gandum', 'Dibawa ke pabrik penggilingan', 'Diproses dan dikemas dalam karung', 'Kapal kargo membawanya ke Indonesia', 'Tiba di pelabuhan Indonesia', 'Melalui pemeriksaan bea cukai', 'Didistribusikan ke pabrik roti dan makanan']
+        },
+        daging: {
+          title: '🥩 Perjalanan Daging Sapi dari Australia',
+          steps: [
+            { emoji: '🐄', title: 'Peternakan Sapi', desc: 'Sapi dipelihara di peternakan Australia yang luas dan subur dengan pakan rumput berkualitas tinggi.' },
+            { emoji: '🏭', title: 'Penyembelihan Higienis', desc: 'Sapi disembelih di fasilitas modern dengan standar internasional yang ketat untuk memastikan kebersihan.' },
+            { emoji: '❄️', title: 'Pembekuan', desc: 'Daging sapi dibekukan dalam suhu -18°C atau lebih dingin untuk menjaga kesegaran dan kualitas nutrisi.' },
+            { emoji: '📦', title: 'Pengemasan Vakum', desc: 'Daging dikemas dalam vakum dan dimasukkan ke dalam kontainer berpendingin untuk pengiriman.' },
+            { emoji: '🚢', title: 'Kapal Berpendingin', desc: 'Kapal khusus dengan sistem pendingin terpadu membawa daging sapi ke Indonesia dengan suhu terjaga.' },
+            { emoji: '🇮🇩', title: 'Tiba di Indonesia', desc: 'Daging tiba di pelabuhan Indonesia, melalui inspeksi kesehatan dan bea cukai untuk memastikan aman konsumsi.' },
+            { emoji: '🥘', title: 'Dijual di Pasar', desc: 'Daging sapi berkualitas dijual di pasar, supermarket, dan restoran untuk dikonsumsi masyarakat Indonesia!' }
+          ],
+          flow: 'Peternakan Australia → Penyembelihan → Pembekuan → Pengemasan → Kapal Pendingin → Pelabuhan Indo → Pasar 🇮🇩',
+          process: ['Sapi dipelihara di peternakan Australia', 'Disembelih di fasilitas modern', 'Daging dibekukan dalam suhu -18°C', 'Dikemas vakum dan dalam kontainer', 'Kapal berpendingin membawanya ke Indonesia', 'Tiba di pelabuhan dan melalui inspeksi', 'Dijual di pasar dan supermarket']
+        }
+      }
+    };
+
+    function openContohModal(type, key) {
+      const data = contohData[type][key];
+      if (!data) return;
+      
+      let stepsHtml = data.steps.map((step, idx) => `
+        <div class="flex gap-3 mb-4">
+          <div class="text-3xl">${step.emoji}</div>
+          <div class="flex-1">
+            <div class="font-bold" style="color: var(--primary);">Tahap ${idx + 1}: ${step.title}</div>
+            <div class="text-sm" style="color: var(--text);">${step.desc}</div>
+          </div>
+        </div>
+      `).join('');
+      
+      const html = `
+        <div class="flex justify-between items-start mb-4">
+          <h2 class="text-3xl font-bold" style="color: var(--primary);">${data.title}</h2>
+          <button onclick="closeModal()" class="text-2xl hover:opacity-70">✕</button>
+        </div>
+        
+        <div class="rounded-xl p-4 mb-4" style="background-color: var(--primary-light);">
+          <h3 class="font-bold mb-2" style="color: var(--primary);">📍 Alur Perjalanan</h3>
+          <p class="text-sm" style="color: var(--text);">${data.flow}</p>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-bold mb-3" style="color: var(--primary);">📖 Tahapan Perjalanan</h3>
+          ${stepsHtml}
+        </div>
+        
+        <button onclick="showOrderingGame('${type}', '${key}')" class="w-full px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md mb-3" style="background-color: var(--primary);">
+          🎮 Mainkan Game Urutkan Proses
+        </button>
+        
+        <button onclick="closeModal()" class="w-full px-4 py-3 rounded-xl font-bold transition" style="background-color: var(--secondary); border: 2px solid var(--primary); color: var(--primary);">
+          Tutup
+        </button>
+      `;
+      
+      showModal(html);
+    }
+
+    function showOrderingGame(type, key) {
+      const data = contohData[type][key];
+      closeModal();
+      
+      // Shuffle array tapi jangan random, gunakan urutan yang sudah disiapkan
+      let shuffled = [...data.process].sort(() => Math.random() - 0.5);
+      
+      // Simpan state game
+      window.orderingGameState = {
+        type: type,
+        key: key,
+        correct: data.process,
+        shuffled: shuffled,
+        userOrder: [],
+        completed: false
+      };
+      
+      renderOrderingGame();
+    }
+
+    function renderOrderingGame() {
+      const state = window.orderingGameState;
+      if (!state) return;
+      
+      const html = `
+        <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h2 class="text-2xl font-bold" style="color: var(--primary);">🎮 Game Urutkan Proses</h2>
+              <button onclick="closeOrderingGame()" class="text-2xl hover:opacity-70">✕</button>
+            </div>
+            
+            <div class="rounded-xl p-4 mb-4" style="background-color: var(--primary-light);">
+              <p class="text-sm" style="color: var(--text);">
+                Urutkan langkah-langkah di bawah sesuai dengan alur yang benar! Klik setiap langkah untuk memilih urutan. 🧠 Ingat-ingat kembali cerita perjalanan barang yang baru kamu lihat!
+              </p>
+            </div>
+            
+            <div class="mb-4">
+              <h3 class="font-bold mb-2" style="color: var(--primary);">🔀 Pilih Urutan yang Benar:</h3>
+              <div id="ordering-container" class="space-y-2 mb-4">
+                ${state.shuffled.map((step, idx) => `
+                  <button data-step-idx="${idx}" onclick="selectOrderingStep(${idx})" 
+                    class="w-full text-left px-4 py-3 rounded-lg border-2 hover:opacity-80 transition font-semibold text-sm"
+                    style="background-color: white; border-color: var(--primary); color: var(--text);">
+                    ${step}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div id="ordering-feedback" class="mb-4 hidden"></div>
+            
+            <div class="flex gap-2">
+              <button onclick="checkOrderingAnswer()" class="flex-1 px-4 py-3 rounded-xl font-bold text-white hover:opacity-90 transition" style="background-color: var(--primary);">
+                ✅ Cek Jawaban
+              </button>
+              <button onclick="resetOrderingGame()" class="flex-1 px-4 py-3 rounded-xl font-bold transition" style="background-color: var(--secondary); border: 2px solid var(--primary); color: var(--primary);">
+                🔄 Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      let modal = document.getElementById('ordering-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'ordering-modal';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = html;
+    }
+
+    function selectOrderingStep(idx) {
+      const state = window.orderingGameState;
+      if (!state || state.completed) return;
+      
+      const step = state.shuffled[idx];
+      state.userOrder.push(step);
+      
+      // Hapus dari daftar pilihan
+      const btn = document.querySelector(`button[data-step-idx="${idx}"]`);
+      if (btn) btn.style.display = 'none';
+      
+      // Tampilkan urutan user
+      updateOrderingDisplay();
+    }
+
+    function updateOrderingDisplay() {
+      const state = window.orderingGameState;
+      const container = document.getElementById('ordering-container');
+      if (!container) return;
+      
+      let display = '<div class="mb-4"><h3 class="font-bold mb-2" style="color: var(--primary);">👤 Urutan Pilihanmu:</h3>';
+      
+      if (state.userOrder.length === 0) {
+        display += '<div class="text-sm text-gray-400 italic">Belum ada pilihan. Klik langkah di atas untuk memilih! 👆</div>';
+      } else {
+        display += '<div class="space-y-2">';
+        state.userOrder.forEach((step, idx) => {
+          display += `
+            <div class="px-4 py-2 rounded-lg text-sm flex items-center justify-between" style="background-color: rgba(59,130,246,0.1); color: var(--text);">
+              <span>${idx + 1}. ${step}</span>
+              <button onclick="removeOrderingStep(${idx})" class="text-red-500 hover:scale-110">✕</button>
+            </div>
+          `;
+        });
+        display += '</div>';
+      }
+      display += '</div>';
+      
+      const existingDisplay = container.parentElement.querySelector('[id^="user-order"]');
+      if (existingDisplay) {
+        existingDisplay.innerHTML = display.replace('<div class="mb-4">', '<div class="mb-4" id="user-order-display">').replace('</div>', '</div>');
+      } else {
+        container.insertAdjacentHTML('afterend', display.replace('<div class="mb-4">', '<div class="mb-4" id="user-order-display">'));
+      }
+    }
+
+    function removeOrderingStep(idx) {
+      const state = window.orderingGameState;
+      if (!state) return;
+      
+      const removed = state.userOrder[idx];
+      state.userOrder.splice(idx, 1);
+      
+      // Tampilkan kembali tombol
+      state.shuffled.forEach((step, stepIdx) => {
+        if (step === removed) {
+          const btn = document.querySelector(`button[data-step-idx="${stepIdx}"]`);
+          if (btn) btn.style.display = 'block';
+        }
+      });
+      
+      updateOrderingDisplay();
+    }
+
+    function checkOrderingAnswer() {
+      const state = window.orderingGameState;
+      if (!state) return;
+      
+      // Cek jika semua sudah dipilih
+      if (state.userOrder.length !== state.correct.length) {
+        alert('Belum selesai! Pilih semua langkah dulu! 👆');
+        return;
+      }
+      
+      // Cek urutan
+      const isCorrect = state.userOrder.every((step, idx) => step === state.correct[idx]);
+      
+      const feedback = document.getElementById('ordering-feedback');
+      if (feedback) {
+        if (isCorrect) {
+          feedback.innerHTML = `
+            <div class="rounded-lg p-4 font-bold flex items-start gap-2 border-l-4" style="background-color: rgba(22,163,74,0.15); border-color: #16a34a; color: #16a34a;">
+              <span class="text-2xl">🎉</span>
+              <span>Hebat! Kamu berhasil mengurutkan proses dengan benar! Sekarang kamu memahami alur ${state.type === 'ekspor' ? 'ekspor' : 'impor'} dengan sempurna! 🌟</span>
+            </div>
+          `;
+          state.completed = true;
+        } else {
+          feedback.innerHTML = `
+            <div class="rounded-lg p-4 font-bold flex items-start gap-2 border-l-4" style="background-color: rgba(220,38,38,0.15); border-color: #dc2626; color: #dc2626;">
+              <span class="text-2xl">💡</span>
+              <span>Belum tepat. Coba ingat: ${state.type === 'ekspor' ? 'barang diproduksi dulu, lalu dikemas, diperiksa, dikirim, dan dijual' : 'barang diproduksi, dikemas, dikirim, masuk bea cukai, didistribusikan, baru dijual'}. Silakan coba lagi! 🔄</span>
+            </div>
+          `;
+        }
+        feedback.classList.remove('hidden');
+      }
+    }
+
+    function resetOrderingGame() {
+      window.orderingGameState.userOrder = [];
+      document.querySelectorAll('#ordering-container button').forEach(btn => btn.style.display = 'block');
+      document.getElementById('ordering-feedback').classList.add('hidden');
+      updateOrderingDisplay();
+    }
+
+    function closeOrderingGame() {
+      const modal = document.getElementById('ordering-modal');
+      if (modal) modal.remove();
+      window.orderingGameState = null;
+    }
+
+    function pageContoh() {
+      const eksporItems = [
+        { key: 'kopi', emoji: '☕', title: 'Kopi ke Amerika', desc: 'Petani kopi di Indonesia menjual biji kopi ke Amerika Serikat.' },
+        { key: 'sawit', emoji: '🌴', title: 'Sawit ke India', desc: 'Perusahaan mengirim minyak kelapa sawit ke India.' },
+        { key: 'batik', emoji: '🎨', title: 'Batik ke Jepang', desc: 'Pengrajin batik menjual produk ke Jepang.' },
+        { key: 'ikan', emoji: '🐟', title: 'Ikan Tuna ke Eropa', desc: 'Nelayan Indonesia mengekspor ikan tuna ke Eropa.' }
+      ];
+      
+      const imporItems = [
+        { key: 'mobil', emoji: '🚗', title: 'Mobil dari Jepang', desc: 'Dealer mendatangkan mobil Toyota atau Honda dari Jepang.' },
+        { key: 'hp', emoji: '📱', title: 'HP dari Tiongkok', desc: 'Smartphone banyak didatangkan dari Tiongkok.' },
+        { key: 'gandum', emoji: '🌾', title: 'Gandum dari Australia', desc: 'Bahan baku roti dan mi instan dari Australia.' },
+        { key: 'daging', emoji: '🥩', title: 'Daging Sapi dari Australia', desc: 'Daging sapi untuk kebutuhan pasar lokal.' }
+      ];
+      
+      const renderItems = (items, type) => items.map(item => `
+        <div class="rounded-xl p-4 border-2 hover:shadow-lg transition cursor-pointer" style="background-color: var(--secondary); border-color: var(--primary-light);">
+          <div class="flex items-start justify-between mb-2">
+            <div class="text-3xl">${item.emoji}</div>
+            <button onclick="openContohModal('${type}', '${item.key}')" class="px-2 py-1 rounded text-xs font-bold text-white hover:opacity-90" style="background-color: var(--primary);">
+              Lihat 👁️
+            </button>
+          </div>
+          <h4 class="font-bold mb-1" style="color: var(--primary);">${item.title}</h4>
+          <p class="text-sm" style="color: var(--text);">${item.desc}</p>
+        </div>
+      `).join('');
+      
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 5', 'Contoh Kegiatan Ekspor & Impor', 'Dalam kehidupan sehari-hari 🌏')}
+        ${audioButton('contoh')}
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="rounded-2xl shadow-md overflow-hidden" style="background-color: var(--secondary);">
+            <div class="text-white p-4 flex items-center gap-2" style="background-color: var(--primary);">
+              <span class="text-3xl">📤</span>
+              <h3 class="text-xl font-bold">Contoh Ekspor</h3>
+            </div>
+            <div class="p-5 grid gap-3">
+              ${renderItems(eksporItems, 'ekspor')}
+            </div>
+          </div>
+          
+          <div class="rounded-2xl shadow-md overflow-hidden" style="background-color: var(--secondary);">
+            <div class="text-white p-4 flex items-center gap-2" style="background-color: var(--primary);">
+              <span class="text-3xl">📥</span>
+              <h3 class="text-xl font-bold">Contoh Impor</h3>
+            </div>
+            <div class="p-5 grid gap-3">
+              ${renderItems(imporItems, 'impor')}
+            </div>
+          </div>
+        </div>
+        
+        <div class="border-l-8 rounded-2xl p-6 mt-6" style="background-color: var(--secondary); border-color: var(--accent); color: var(--text);">
+          <h3 class="text-xl font-bold mb-2" style="color: var(--primary);">🏠 Dalam Kehidupan Sehari-hari</h3>
+          <p class="text-sm leading-relaxed">Saat kamu memakai HP, kemungkinan itu adalah <b>barang impor</b>. Saat kamu melihat kopi atau batik Indonesia dijual ke luar negeri, itu adalah contoh <b>ekspor</b>. Kegiatan ekspor dan impor sangat dekat dengan hidup kita! 🌟</p>
+        </div>
+        
+        <div class="rounded-2xl p-6 md:p-8 mt-6 shadow-xl text-white wave-bg">
+          <h3 class="text-2xl font-bold mb-3">💡 Tips Belajar</h3>
+          <p class="text-white/90 leading-relaxed">
+            Klik tombol <b>"Lihat 👁️"</b> pada setiap contoh untuk melihat cerita lengkap perjalanan barang. 
+            Lalu mainkan <b>"Game Urutkan Proses"</b> untuk menguji pemahamanmu tentang alur ekspor dan impor! 🎮
+          </p>
+        </div>
+        
+        ${navButtons('manfaat', 'kuis')}
+      </section>`;
+    }
+
+    function pageVideo() {
+      return `<section class="page">
+        ${hero('wave-bg', 'BAB 6', config.video_title, config.video_description, '🎬')}
+        ${audioButton('video')}
+        <div class="rounded-2xl shadow-lg overflow-hidden mb-6" style="background-color: var(--secondary);">
+          <video 
+            controls
+            style="width: 100%; height: auto; display: block; background: #000; border-radius: 1rem;"
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23000' width='400' height='300'/%3E%3Cpolygon fill='%23fff' points='160,80 160,220 280,150'/%3E%3C/svg%3E">
+            <source src="video-ekspor-impor.mp4" type="video/mp4">
+            Browser kamu tidak mendukung video HTML5. Silakan gunakan browser yang lebih baru.
+          </video>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          ${card('🎯', 'Yang Akan Kamu Pelajari', list(['✅ Konsep dasar ekspor dan impor', '✅ Proses kegiatan perdagangan internasional', '✅ Manfaat bagi ekonomi negara', '✅ Contoh nyata di Indonesia']))}
+          ${card('💡', 'Tips Menonton', list(['📱 Nonton dengan volume penuh agar jelas', '⏸️ Jeda video jika perlu mencatat', '🔁 Tonton berulang kali jika perlu', '📝 Catat poin-poin penting']))}
+        </div>
+        <div class="rounded-2xl p-6 md:p-8 mt-6 border-l-8" style="background-color: var(--secondary); border-color: var(--primary); color: var(--text);">
+          <h3 class="text-xl font-bold mb-3" style="color: var(--primary);">📚 Ringkasan Materi Video</h3>
+          <p class="text-sm leading-relaxed mb-3">Video ini menjelaskan secara mendalam tentang ekspor dan impor sebagai bagian penting dari perdagangan internasional. Kamu akan belajar bagaimana Indonesia berperan dalam perdagangan global melalui contoh-contoh nyata.</p>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div class="p-3 rounded-lg" style="background-color: var(--primary-light);">
+              <div class="font-bold" style="color: var(--primary);">📤 Ekspor</div>
+              <div class="text-xs mt-1">Menjual ke luar negeri</div>
+            </div>
+            <div class="p-3 rounded-lg" style="background-color: var(--primary-light);">
+              <div class="font-bold" style="color: var(--primary);">📥 Impor</div>
+              <div class="text-xs mt-1">Membeli dari luar negeri</div>
+            </div>
+            <div class="p-3 rounded-lg" style="background-color: var(--primary-light);">
+              <div class="font-bold" style="color: var(--primary);">🌍 Perdagangan</div>
+              <div class="text-xs mt-1">Hubungan antar negara</div>
+            </div>
+          </div>
+        </div>
+        ${navButtons('beranda', 'ekspor')}
+      </section>`;
+    }
+
+    function pageKuis() {
+      if (quizState.finished) return pageHasil();
+      const i = quizState.current, q = quizQuestions[i], answered = quizState.answers[i] != null;
+      return `<section class="page">
+        ${hero('wave-bg', 'KUIS INTERAKTIF', 'Uji Pemahamanmu! 🎯', 'Pilih jawaban yang paling tepat')}
+        ${audioButton('kuis')}
+        <div class="rounded-2xl shadow-lg p-6 md:p-8" style="background-color: var(--secondary);">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-bold" style="color: var(--text);">Pertanyaan ${i + 1} / ${quizQuestions.length}</span>
+            <span class="px-3 py-1 rounded-full font-bold text-sm text-white" style="background-color: var(--primary);">Skor: ${quizState.score}</span>
+          </div>
+          <div class="w-full rounded-full h-3 mb-6 overflow-hidden" style="background-color: var(--primary-light);">
+            <div class="h-3 transition-all" style="width:${i / quizQuestions.length * 100}%; background-color: var(--primary);"></div>
+          </div>
+          <h3 class="text-xl md:text-2xl font-bold mb-5" style="color: var(--text);">${i + 1}. ${q.q}</h3>
+          <div id="quiz-options" class="grid gap-3">
+            ${q.o.map((opt, idx) => `<button data-idx="${idx}" class="quiz-option text-left p-4 border-2 rounded-xl bg-white font-semibold flex items-center gap-3" style="border-color: var(--primary); color: var(--text);">
+              <span class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style="background-color: var(--primary);">${String.fromCharCode(65 + idx)}</span>
+              <span>${opt}</span>
+            </button>`).join('')}
+          </div>
+          <div id="quiz-feedback" class="mt-5 hidden"></div>
+          <div class="flex justify-between items-center mt-6 pt-5 border-t-2 border-dashed" style="border-color: var(--primary-light);">
+            <button onclick="prevQuestion()" ${i == 0 ? 'disabled' : ''} class="px-5 py-3 rounded-xl font-bold hover:opacity-80 transition disabled:opacity-40" style="background-color: var(--secondary); border: 2px solid var(--primary); color: var(--primary);">← Back</button>
+            <button id="next-quiz-btn" onclick="nextQuestion()" class="px-5 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md disabled:opacity-40" style="background-color: var(--primary);" ${answered ? '' : 'disabled'}>${i == quizQuestions.length - 1 ? 'Selesai' : 'Next'} →</button>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function pageHasil() {
+      const s = quizState.score;
+      let msg = 'Ayo belajar lagi agar lebih paham.', emoji = '💪', bgcolor = '#f87171';
+      if (s >= 9) { msg = 'Hebat! Kamu sangat memahami materi ekspor dan impor.'; emoji = '🏆'; bgcolor = '#fbbf24' }
+      else if (s >= 7) { msg = 'Bagus! Pemahamanmu sudah baik.'; emoji = '🌟'; bgcolor = '#4ade80' }
+      else if (s >= 5) { msg = 'Cukup baik, tetapi perlu belajar lagi.'; emoji = '📚'; bgcolor = '#60a5fa' }
+      return `<section class="page">
+        <div class="rounded-3xl p-8 md:p-12 shadow-2xl text-center relative overflow-hidden wave-bg">
+          <div class="absolute inset-0 dots-pattern opacity-20"></div>
+          <div class="relative">
+            <div class="text-8xl mb-4 float">${emoji}</div>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-2">Hasil Kuismu</h2>
+            <p class="text-white/90 text-lg mb-6">${quizState.finished ? 'Kuis telah selesai!' : 'Kerjakan kuis terlebih dahulu ya!'}</p>
+            ${quizState.finished ? `<div class="rounded-2xl p-6 inline-block mb-4 text-white" style="background-color: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);">
+              <div class="text-sm font-bold uppercase tracking-wide">Skor Kamu</div>
+              <div class="text-6xl md:text-7xl font-extrabold my-2">${s}<span class="text-3xl opacity-70"> / 10</span></div>
+              <div class="w-full rounded-full h-3 mt-3 overflow-hidden" style="background-color: rgba(255,255,255,0.3);"><div class="h-3" style="width:${s * 10}%; background-color: white;"></div></div>
+            </div><p class="text-xl md:text-2xl font-bold text-white mt-4">${msg}</p>${audioButton('hasil')}` : `<button onclick="goTo('kuis')" class="mt-4 px-6 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-lg" style="background-color: var(--secondary); color: var(--primary);">Mulai Kuis Sekarang</button>`}
+          </div>
+        </div>
+        ${quizState.finished ? `<div class="rounded-2xl shadow-md p-6 mt-6" style="background-color: var(--secondary);">
+          <h3 class="text-xl font-bold mb-4" style="color: var(--text);">📋 Ringkasan Jawaban</h3>
+          <div class="space-y-3">
+            ${quizQuestions.map((q, i) => {
+              let u = quizState.answers[i], c = u == q.a;
+              return `<div class="p-4 rounded-xl border-2" style="background-color: ${c ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)'}; border-color: ${c ? '#16a34a' : '#dc2626'};">
+                <div class="font-bold" style="color: var(--text);">${i + 1}. ${q.q}</div>
+                <div class="text-sm" style="color: ${c ? '#16a34a' : '#dc2626'}">${c ? '✅ Benar' : `❌ Jawabanmu: ${q.o[u]}`}</div>
+                ${c ? '' : `<div class="text-sm mt-1" style="color: #16a34a;">✔️ Jawaban benar: <b>${q.o[q.a]}</b></div>`}
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <button onclick="resetQuiz()" class="flex-1 px-5 py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-md" style="background-color: var(--primary);">↻ Ulangi Kuis</button>
+            <button onclick="goTo('beranda')" class="flex-1 px-5 py-3 rounded-xl font-bold transition" style="background-color: var(--secondary); border: 2px solid var(--primary); color: var(--primary);">⌂ Kembali ke Beranda</button>
+          </div>
+        </div>` : ''}
+        <div class="mt-6">${navButtons('kuis', null)}</div>
+      </section>`;
+    }
+
+    function resetQuiz() { quizState = { current: 0, answers: Array(10).fill(null), score: 0, finished: false }; goTo('kuis') }
+    function prevQuestion() { if (quizState.current > 0) { quizState.current--; renderPage() } }
+    function nextQuestion() {
+      if (quizState.answers[quizState.current] == null) return;
+      if (quizState.current < quizQuestions.length - 1) { quizState.current++; renderPage() }
+      else { quizState.finished = true; quizState.score = quizState.answers.reduce((n, a, i) => n + (a == quizQuestions[i].a ? 1 : 0), 0); goTo('hasil') }
+    }
+
+    function attachQuizHandlers() {
+      const c = document.getElementById('quiz-options');
+      if (!c) return;
+      const i = quizState.current, q = quizQuestions[i], chosen = quizState.answers[i];
+      const paint = idx => {
+        c.querySelectorAll('.quiz-option').forEach(btn => {
+          const b = +btn.dataset.idx;
+          btn.classList.add('disabled');
+          if (b == q.a) btn.classList.add('correct');
+          else if (b == idx) btn.classList.add('wrong');
+        });
+        showFeedback(idx == q.a, q);
+      };
+      if (chosen != null) return paint(chosen);
+      c.querySelectorAll('.quiz-option').forEach(btn => btn.onclick = () => {
+        const idx = +btn.dataset.idx;
+        quizState.answers[i] = idx;
+        paint(idx);
+        if (idx != q.a) btn.classList.add('shake');
+        const n = document.getElementById('next-quiz-btn');
+        if (n) n.disabled = false;
+      });
+    }
+
+    function showFeedback(ok, q) {
+      const fb = document.getElementById('quiz-feedback');
+      if (!fb) return;
+      fb.classList.remove('hidden');
+      fb.innerHTML = ok ? `<div class="rounded-lg p-4 font-bold flex items-center gap-2 border-l-4" style="background-color: rgba(22,163,74,0.1); border-color: #16a34a; color: #16a34a;"><span class="text-2xl">🎉</span> Benar sekali! Jawabanmu tepat.</div>` : `<div class="rounded-lg p-4 font-bold flex items-center gap-2 border-l-4" style="background-color: rgba(220,38,38,0.1); border-color: #dc2626; color: #dc2626;"><span class="text-2xl">💡</span> Kurang tepat. Jawaban yang benar: <b>${q.o[q.a]}</b></div>`;
+    }
+
+    function renderPage() {
+      const map = { beranda: pageBeranda, ekspor: pageEkspor, impor: pageImpor, perbedaan: pagePerbedaan, manfaat: pageManfaat, contoh: pageContoh, video: pageVideo, kuis: pageKuis, hasil: pageHasil };
+      document.getElementById('main-content').innerHTML = map[currentPage]();
+      lucide.createIcons();
+      if (currentPage == 'kuis' && !quizState.finished) attachQuizHandlers();
+    }
+
+    renderNav();
+    renderPage();
+    applyConfig();
+  </script>
+</html>
